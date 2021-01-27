@@ -1,0 +1,65 @@
+{
+	"name": "franky",
+	"displayName": "Franky",
+	"description": "tools in work",
+	"version": "0.0.1",
+	"engines": {
+		"vscode": "^1.50.0"
+	},
+	"categories": [
+		"Other"
+	],
+	"activationEvents": [
+		"onCommand:franky.fileheader"
+	],
+	"main": "./extension.js",
+	"contributes": {
+		"commands": [
+			{
+				"command": "franky.fileheader",
+				"title": "fileheader"
+			}
+		],
+		"keybindings": [
+            {
+                "command": "franky.fileheader",
+                "key": "ctrl+alt+i",
+                "when": "editorTextFocus"
+            }
+        ],
+		"configuration": {
+			"type": "object",
+			"title": "franky-fileheader Configuration",
+			"properties": {
+				"franky.fileheader.author": {
+					"type": "string",
+                    "default": "nsc",
+                    "description": "your name"
+				},
+				"franky.fileheader.email": {
+					"type": "string",
+                    "default": "nsc",
+                    "description": "your name"
+				}
+				
+			}
+		}
+	},
+	"scripts": {
+		"lint": "eslint .",
+		"pretest": "npm run lint",
+		"test": "node ./test/runTest.js",
+		"postinstall": "node ./node_modules/vscode/bin/install"
+	},
+	"devDependencies": {
+		"@types/vscode": "^1.50.0",
+		"@types/glob": "^7.1.3",
+		"@types/mocha": "^8.0.0",
+		"@types/node": "^12.11.7",
+		"eslint": "^7.9.0",
+		"glob": "^7.1.6",
+		"mocha": "^8.1.3",
+		"typescript": "^4.0.2",
+		"vscode-test": "^1.4.0"
+	}
+}
