@@ -2,10 +2,16 @@
 	"name": "franky",
 	"displayName": "Franky",
 	"description": "tools in work",
-	"version": "0.0.1",
+	"version": "0.0.3",
 	"engines": {
 		"vscode": "^1.50.0"
 	},
+	"publisher": "NorthSeacoder",
+	"repository": {
+        "type": "git",
+        "url": "https://github.com/NorthSeacoder/franky.git"
+	},
+	"icon": "images/franky.jpg",
 	"categories": [
 		"Other"
 	],
@@ -29,20 +35,7 @@
         ],
 		"configuration": {
 			"type": "object",
-			"title": "franky-fileheader Configuration",
-			"properties": {
-				"franky.fileheader.author": {
-					"type": "string",
-                    "default": "nsc",
-                    "description": "your name"
-				},
-				"franky.fileheader.email": {
-					"type": "string",
-                    "default": "nsc",
-                    "description": "your name"
-				}
-				
-			}
+			"title": "franky-fileheader Configuration"
 		}
 	},
 	"scripts": {

@@ -10,7 +10,7 @@ const map={
 
 `,
 "vue":
-`<!-- @author ${name} -->
+`<!-- @Author ${name} -->
 <!-- @Date: ${time} -->
 <!-- @Last Modified by: ${name} -->
 <!-- @Last Modified time: ${LastModifiedTime} -->
