@@ -18,9 +18,9 @@ eg:
 .js
 /*
  * @Author: git config.name
- * @Date: 2021-01-27 11:16:13
+ * @Date: 2021-01-31 11:16:13
  * @Last Modified by: git config.name
- * @Last Modified time: 2021-01-27 16:46:45
+ * @Last Modified time: 2021-01-31 16:46:45
  */
 
 ```
@@ -28,9 +28,9 @@ eg:
 .vue
 
 <!-- @author git config.name -->
-<!-- @Date: 2021-01-26 16:58:14 -->
+<!-- @Date: 2021-01-31 16:58:14 -->
 <!-- @Last Modified by: git config.name -->
-<!-- @Last Modified time: 2021-01-27 16:12:26 -->
+<!-- @Last Modified time: 2021-01-31 16:12:26 -->
 
 ```
 ## hot key
