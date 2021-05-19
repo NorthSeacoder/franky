@@ -19,7 +19,7 @@ const {fileheader, fileheaderUpdate} = require('./src/fileheader/command');
  */
 function activate(context) {
     let disposable = vscode.commands.registerCommand('franky.fileheader', fileheader);
-
+    console.log('"franky" is now active!');
     context.subscriptions.push(disposable);
     vscode.workspace.onDidSaveTextDocument((file) => {
         setTimeout(() => {

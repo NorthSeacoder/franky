@@ -2,7 +2,7 @@
 	"name": "franky",
 	"displayName": "Franky",
 	"description": "tools in work",
-	"version": "0.0.4",
+	"version": "0.0.5",
 	"engines": {
 		"vscode": "^1.50.0"
 	},
@@ -16,7 +16,10 @@
 		"Other"
 	],
 	"activationEvents": [
-		"onCommand:franky.fileheader"
+		"onCommand:franky.fileheader",
+		"onLanguage:javascript",
+		"onLanguage:typescript",
+		"onLanguage:vue"
 	],
 	"main": "./extension.js",
 	"contributes": {

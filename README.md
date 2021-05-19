@@ -15,7 +15,7 @@ ctrl+alt+i You can insert comments in the head, ctrl+s After you save the file, 
 
 eg:
 ```js
-.js
+.js/.ts
 /*
  * @Author: git config.name
  * @Date: 2021-01-31 11:16:13

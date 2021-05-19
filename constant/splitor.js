@@ -4,6 +4,10 @@ exports.getCommentSplitor = (langId) => {
             start: ':',
             end: undefined,
         },
+        typescript: {
+            start: ':',
+            end: undefined,
+        },
         vue: {
             start: ':',
             end: '-->',
