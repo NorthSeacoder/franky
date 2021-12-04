@@ -33,6 +33,17 @@ eg:
 <!-- @Last Modified time: 2021-01-31 16:12:26 -->
 
 ```
-## hot key
+#### hot key
 
 `ctrl+alt+i` You can insert comments in the head.\
+
+### diffLog
+
+匹配的远程分支命名格式:[项目名][tag] msg  
+主要在自己公司用....
+
+根据项目名与 tag 筛选相应的远程分支,选择对比分支后与 master 对比筛选出未上线 commits  
+
+有两种展示方式:
+ - commits + revert
+ - 全commits:之前revert的original commit ,按提交时间排序

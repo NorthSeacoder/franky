@@ -2,11 +2,12 @@
 	"name": "franky",
 	"displayName": "Franky",
 	"description": "tools in work",
-	"version": "0.0.5",
+	"version": "0.1.0",
 	"engines": {
 		"vscode": "^1.50.0"
 	},
 	"publisher": "NorthSeacoder",
+	"license": "SEE LICENSE IN LICENSE",
 	"repository": {
 		"type": "git",
 		"url": "https://github.com/NorthSeacoder/franky.git"
@@ -15,24 +16,39 @@
 	"categories": [
 		"Other"
 	],
+	"keywords": [
+        "fileheader",
+        "git log",
+        "multi-root ready"
+    ],
 	"activationEvents": [
 		"onCommand:franky.fileheader",
+		"onCommand:franky.diffLog",
 		"onLanguage:javascript",
 		"onLanguage:typescript",
 		"onLanguage:vue"
 	],
-	"main": "./extension.js",
+	"main": "./dist/index.js",
 	"contributes": {
 		"commands": [
 			{
 				"command": "franky.fileheader",
 				"title": "fileheader"
+			},
+			{
+				"command": "franky.diffLog",
+				"title": "diffLog"
 			}
 		],
 		"keybindings": [
 			{
 				"command": "franky.fileheader",
 				"key": "ctrl+alt+i",
+				"when": "editorTextFocus"
+			},
+			{
+				"command": "franky.diffLog",
+				"key": "ctrl+alt+d",
 				"when": "editorTextFocus"
 			}
 		],
@@ -42,29 +58,32 @@
 		}
 	},
 	"scripts": {
-		"cz": "git add . &&git-cz",
+		"cz": "git add . && git-cz",
 		"lint": "eslint .",
 		"pretest": "npm run lint",
 		"test": "node ./test/runTest.js",
-		"pack":"vsce package",
-		"pub":"vsce publish "
+		"pack": "npm run build && vsce package",
+		"pub": "vsce publish ",
+		"build": "webpack --mode production",
+		"dev": "webpack --watch --mode development"
 	},
 	"devDependencies": {
-		"@types/vscode": "^1.50.0",
-		"@types/glob": "^7.1.3",
-		"@types/mocha": "^8.0.0",
-		"@types/node": "^12.11.7",
+		"@nsea/cz": "0.0.2",
+		"commitizen": "^4.1.5",
 		"eslint": "^7.9.0",
 		"glob": "^7.1.6",
 		"mocha": "^8.1.3",
-		"typescript": "^4.0.2",
 		"vscode-test": "^1.4.0",
-		"@nsea/cz": "0.0.2",
-		"commitizen": "^4.1.5"
+		"webpack": "^5.64.2",
+		"webpack-cli": "^4.9.1"
 	},
 	"config": {
 		"commitizen": {
 			"path": "./node_modules/@nsea/cz"
 		}
+	},
+	"dependencies": {
+		"dayjs": "^1.10.7",
+		"simple-git": "^2.47.0"
 	}
 }

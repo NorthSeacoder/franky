@@ -1,19 +1,18 @@
-const vscode = require('vscode');
+import vscode from 'vscode';
 const {Position, Range} = vscode;
-const execSync = require('child_process').execSync;
+import {execSync} from 'child_process';
 
-const {getTemplate} = require('../../constant/template');
-const {getCommentSplitor} = require('../../constant/splitor');
+import dayjs from 'dayjs'; 
+import {getTemplate} from '@common/constant/template';
+import {getCommentSplitor} from '@common/constant/splitor';
+import {getRangeFromDocument} from '@common/utils/tools';
 
-const {format} = require('../utils/date');
-const {getRangeFromDocument} = require('../utils/tools');
-
-exports.fileheader = () => {
+export const fileheader = () => {
     const editor = vscode.window.activeTextEditor;
     const langId = editor.document.languageId;
     let name = execSync('git config --get user.name').toString().trim();
     editor.edit(function (editBuilder) {
-        const time = format(new Date(), 'yyyy-MM-dd hh:mm:ss');
+        const time = dayjs().format('YYYY-MM-DD HH:mm:ss');
         const LastModifiedTime = time;
         const Targettemplate = getTemplate({name, langId, time, LastModifiedTime});
         try {
@@ -23,7 +22,8 @@ exports.fileheader = () => {
         }
     });
 };
-exports.fileheaderUpdate = (document) => {
+export const fileheaderUpdate = (document) => {
+    console.log('hasUpdate12');
     const editor = vscode.window.activeTextEditor;
     const MAX_COMMENT_LINE = 8;
     const commentCtx = document.getText(new Range(0, 0, MAX_COMMENT_LINE, 0));
@@ -39,7 +39,7 @@ exports.fileheaderUpdate = (document) => {
     const oleTime = document.getText(timeRange);
     const now = new Date();
     timeDiff = now.getTime() - new Date(oleTime).getTime();
-    const LastModifiedTime = format(now, 'yyyy-MM-dd hh:mm:ss');
+    const LastModifiedTime = dayjs().format('YYYY-MM-DD HH:mm:ss');
     const LastModifiedName = execSync('git config --get user.name').toString().trim();
     if (!!nameRange && !!timeRange && timeDiff > 2000) {
         setTimeout(function () {
