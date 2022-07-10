@@ -2,7 +2,7 @@
 	"name": "franky",
 	"displayName": "Franky",
 	"description": "tools in work",
-	"version": "0.1.0",
+	"version": "0.1.1",
 	"engines": {
 		"vscode": "^1.50.0"
 	},
@@ -17,10 +17,10 @@
 		"Other"
 	],
 	"keywords": [
-        "fileheader",
-        "git log",
-        "multi-root ready"
-    ],
+		"fileheader",
+		"git log",
+		"multi-root ready"
+	],
 	"activationEvents": [
 		"onCommand:franky.fileheader",
 		"onCommand:franky.diffLog",

@@ -18,6 +18,24 @@ const map={
  */
 
 `,
+'javascriptreact':
+`/*
+ * @Author: ${name}
+ * @Date: ${time}
+ * @Last Modified by: ${name}
+ * @Last Modified time: ${LastModifiedTime}
+ */
+
+`,
+'typescriptreact':
+`/*
+ * @Author: ${name}
+ * @Date: ${time}
+ * @Last Modified by: ${name}
+ * @Last Modified time: ${LastModifiedTime}
+ */
+
+`,
 "vue":
 `<!-- @Author ${name} -->
 <!-- @Date: ${time} -->
@@ -26,5 +44,6 @@ const map={
 
 `
 }
+
 return map[langId]||'//'
 }

@@ -8,6 +8,14 @@ exports.getCommentSplitor = (langId) => {
             start: ':',
             end: undefined,
         },
+        javascriptreact: {
+            start: ':',
+            end: undefined,
+        },
+        typescriptreact: {
+            start: ':',
+            end: undefined,
+        },
         vue: {
             start: ':',
             end: '-->',

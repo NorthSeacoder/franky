@@ -23,7 +23,6 @@ export const fileheader = () => {
     });
 };
 export const fileheaderUpdate = (document) => {
-    console.log('hasUpdate12');
     const editor = vscode.window.activeTextEditor;
     const MAX_COMMENT_LINE = 8;
     const commentCtx = document.getText(new Range(0, 0, MAX_COMMENT_LINE, 0));
@@ -35,7 +34,6 @@ export const fileheaderUpdate = (document) => {
     const {start, end} = getCommentSplitor(document.languageId);
     const nameRange = getRangeFromDocument(document, commentNameLineIndex, start, end);
     const timeRange = getRangeFromDocument(document, commentTimeLineIndex, start, end);
-
     const oleTime = document.getText(timeRange);
     const now = new Date();
     timeDiff = now.getTime() - new Date(oleTime).getTime();
