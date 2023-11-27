@@ -1,89 +1,100 @@
 {
-	"name": "franky",
-	"displayName": "Franky",
-	"description": "tools in work",
-	"version": "0.1.1",
-	"engines": {
-		"vscode": "^1.50.0"
-	},
-	"publisher": "NorthSeacoder",
-	"license": "SEE LICENSE IN LICENSE",
-	"repository": {
-		"type": "git",
-		"url": "https://github.com/NorthSeacoder/franky.git"
-	},
-	"icon": "images/franky.jpg",
-	"categories": [
-		"Other"
-	],
-	"keywords": [
-		"fileheader",
-		"git log",
-		"multi-root ready"
-	],
-	"activationEvents": [
-		"onCommand:franky.fileheader",
-		"onCommand:franky.diffLog",
-		"onLanguage:javascript",
-		"onLanguage:typescript",
-		"onLanguage:vue"
-	],
-	"main": "./dist/index.js",
-	"contributes": {
-		"commands": [
-			{
-				"command": "franky.fileheader",
-				"title": "fileheader"
-			},
-			{
-				"command": "franky.diffLog",
-				"title": "diffLog"
-			}
-		],
-		"keybindings": [
-			{
-				"command": "franky.fileheader",
-				"key": "ctrl+alt+i",
-				"when": "editorTextFocus"
-			},
-			{
-				"command": "franky.diffLog",
-				"key": "ctrl+alt+d",
-				"when": "editorTextFocus"
-			}
-		],
-		"configuration": {
-			"type": "object",
-			"title": "franky-fileheader Configuration"
-		}
-	},
-	"scripts": {
-		"cz": "git add . && git-cz",
-		"lint": "eslint .",
-		"pretest": "npm run lint",
-		"test": "node ./test/runTest.js",
-		"pack": "npm run build && vsce package",
-		"pub": "vsce publish ",
-		"build": "webpack --mode production",
-		"dev": "webpack --watch --mode development"
-	},
-	"devDependencies": {
-		"@nsea/cz": "0.0.2",
-		"commitizen": "^4.1.5",
-		"eslint": "^7.9.0",
-		"glob": "^7.1.6",
-		"mocha": "^8.1.3",
-		"vscode-test": "^1.4.0",
-		"webpack": "^5.64.2",
-		"webpack-cli": "^4.9.1"
-	},
-	"config": {
-		"commitizen": {
-			"path": "./node_modules/@nsea/cz"
-		}
-	},
-	"dependencies": {
-		"dayjs": "^1.10.7",
-		"simple-git": "^2.47.0"
-	}
+    "name": "franky",
+    "displayName": "Franky",
+    "description": "tools in work",
+    "version": "0.1.1",
+    "engines": {
+        "vscode": "^1.83.0",
+        "node": ">=18"
+    },
+    "publisher": "NorthSeacoder",
+    "license": "MIT",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/NorthSeacoder/franky.git"
+    },
+    "icon": "images/tools.png",
+    "categories": [
+        "Other"
+    ],
+    "keywords": [
+        "fileheader",
+        "git log",
+        "multi-root ready"
+    ],
+    "activationEvents": [
+        "onLanguage:javascript",
+        "onLanguage:typescript",
+        "onLanguage:vue"
+    ],
+    "main": "./dist/index.js",
+    "contributes": {
+        "commands": [
+            {
+                "command": "franky.fileheader",
+                "title": "fileheader"
+            },
+            {
+                "command": "franky.diffLog",
+                "title": "diffLog"
+            }
+        ],
+        "keybindings": [
+            {
+                "command": "franky.fileheader",
+                "key": "ctrl+alt+i",
+                "when": "editorTextFocus"
+            },
+            {
+                "command": "franky.diffLog",
+                "key": "ctrl+alt+d",
+                "when": "editorTextFocus"
+            }
+        ],
+        "configuration": {
+            "type": "object",
+            "title": "franky-fileheader Configuration"
+        }
+    },
+    "scripts": {
+        "cz": "git add . && git-cz",
+        "cl": "conventional-changelog -p angular -i CHANGELOG.md -s -r 0",
+        "build": "tsup src/index.ts --external vscode",
+        "dev": "nr build --watch",
+        "lint": "eslint .",
+        "vscode:prepublish": "nr build",
+        "publish": "vsce publish --no-dependencies",
+        "pack": "vsce package --no-dependencies",
+        "test": "vitest",
+        "typecheck": "tsc --noEmit",
+        "release": "bumpp && nr publish"
+    },
+    "devDependencies": {
+        "@nsea/cz": "0.0.2",
+        "commitizen": "^4.1.5",
+        "conventional-changelog": "^4.0.0",
+        "conventional-changelog-cli": "^3.0.0",
+        "@antfu/ni": "^0.21.9",
+        "@types/node": "^20.9.0",
+        "@types/vscode": "^1.84.1",
+        "@vscode/vsce": "^2.22.0",
+        "bumpp": "^9.2.0",
+        "eslint": "^8.53.0",
+        "esno": "^4.0.0",
+        "pnpm": "^8.10.5",
+        "rimraf": "^5.0.5",
+        "tsup": "^7.2.0",
+        "typescript": "^5.2.2",
+        "vite": "^4.5.0",
+        "vitest": "^0.34.6"
+    },
+    "config": {
+        "commitizen": {
+            "path": "cz-conventional-changelog"
+        }
+    },
+    "dependencies": {
+        "dayjs": "^1.10.7",
+        "simple-git": "^2.47.0"
+    }
 }

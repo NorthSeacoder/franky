@@ -1,20 +1,45 @@
-import vscode from 'vscode';
-const {Position, Range} = vscode;
+import {window, Position, Range} from 'vscode';
+import type {TextDocument} from 'vscode';
 import {execSync} from 'child_process';
-
-import dayjs from 'dayjs'; 
-import {getTemplate} from '@common/constant/template';
-import {getCommentSplitor} from '@common/constant/splitor';
+import {log} from '@utils/log';
 import {getRangeFromDocument} from '@common/utils/tools';
 
-export const fileheader = () => {
-    const editor = vscode.window.activeTextEditor;
+import dayjs from 'dayjs';
+interface ITemplate {
+    langId: string;
+    name: string;
+    time: string;
+    LastModifiedTime: string;
+}
+const getTemplate = ({langId, name, time, LastModifiedTime}: ITemplate): string => {
+    return (
+        langId !== 'vue'
+            ? [
+                  '/**',
+                  ` * @Author: ${name}`,
+                  ` * @Date: ${time}`,
+                  ` * @Last Modified by: ${name}`,
+                  ` * @Last Modified time: ${LastModifiedTime}`,
+                  ' */'
+              ]
+            : [
+                  `<!-- @Author: ${name} -->`,
+                  `<!-- @Date: ${time} -->`,
+                  `<!-- @Last Modified by: ${name} -->`,
+                  `<!-- @Last Modified time: ${LastModifiedTime} -->`
+              ]
+    ).join('\n');
+};
+export default () => {
+    const editor = window.activeTextEditor;
+    if (!editor) return;
     const langId = editor.document.languageId;
     let name = execSync('git config --get user.name').toString().trim();
     editor.edit(function (editBuilder) {
         const time = dayjs().format('YYYY-MM-DD HH:mm:ss');
         const LastModifiedTime = time;
         const Targettemplate = getTemplate({name, langId, time, LastModifiedTime});
+        log.debug(name, langId, time, LastModifiedTime);
         try {
             editBuilder.insert(new Position(0, 0), Targettemplate); //首行插入
         } catch (error) {
@@ -22,8 +47,9 @@ export const fileheader = () => {
         }
     });
 };
-export const fileheaderUpdate = (document) => {
-    const editor = vscode.window.activeTextEditor;
+export const fileheaderUpdate = (document: TextDocument) => {
+    const editor = window.activeTextEditor;
+    if (!editor) return;
     const MAX_COMMENT_LINE = 8;
     const commentCtx = document.getText(new Range(0, 0, MAX_COMMENT_LINE, 0));
     const commentLineArray = commentCtx.split('\n');
@@ -31,7 +57,8 @@ export const fileheaderUpdate = (document) => {
     const commentNameLineIndex = commentLineArray.findIndex((item) => !!item.match('@Last Modified'));
     const commentTimeLineIndex = commentNameLineIndex + 1;
 
-    const {start, end} = getCommentSplitor(document.languageId);
+    const start = ':';
+    const end = document.languageId === 'vue' ? '-->' : undefined;
     const nameRange = getRangeFromDocument(document, commentNameLineIndex, start, end);
     const timeRange = getRangeFromDocument(document, commentTimeLineIndex, start, end);
     const oleTime = document.getText(timeRange);

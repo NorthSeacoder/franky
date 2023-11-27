@@ -1,21 +1,16 @@
-const {TextDocument, Position} = require('vscode');
+import type {TextDocument, Range} from 'vscode';
+import {Position} from 'vscode';
 
-exports.isVue = (document) => {
+export const isVue = (document: TextDocument) => {
     return document.languageId === 'vue';
 };
 
-exports.isJs = (document) => {
+export const isJs = (document: TextDocument) => {
     return document.languageId === 'javascript';
 };
 
-/**
- *
- * @param {TextDocument} document
- * @param {Number} lineIndex
- * @param {String} startSplitor
- * @param {String} endSplitor
- */
-exports.getRangeFromDocument = (document, lineIndex, startSplitor, endSplitor) => {
+
+export const getRangeFromDocument = (document: TextDocument, lineIndex: number, startSplitor: string, endSplitor: string | undefined) => {
     const {range, text} = document.lineAt(lineIndex);
     if (text.indexOf(startSplitor) < 0) return range;
 
