@@ -3,11 +3,15 @@ import type {ExtensionContext} from 'vscode';
 
 import {log} from '@utils/log';
 import fileheader, {fileheaderUpdate} from '@extentions/fileheader';
+import jenkins from '@extentions/jenkins';
 
-export function activate(context: ExtensionContext) {
+export function activate({subscriptions}: ExtensionContext) {
     log.debug('"franky" is now active!');
-
-    context.subscriptions.push(commands.registerCommand('franky.fileheader', fileheader));
+    commands.registerCommand('franky.fileheader', fileheader);
+    commands.registerCommand('franky.jenkins', jenkins)
+    // subscriptions
+    //     .push(commands.registerCommand('franky.fileheader', fileheader))
+    //     .push(commands.registerCommand('franky.jenkins', jenkins));
     // window.showInformationMessage('Hello')
 
     workspace.onDidSaveTextDocument((file) => {
@@ -17,9 +21,9 @@ export function activate(context: ExtensionContext) {
     });
 
     const statusBar = window.createStatusBarItem(StatusBarAlignment.Left, 0);
-    statusBar.command = 'openInGitHub.openProject';
-    statusBar.text = '$(github)';
-    statusBar.tooltip = 'Open in GitHub';
+    statusBar.command = 'franky.jenkins';
+    statusBar.text = 'Jenkins';
+    statusBar.tooltip = 'Jump to Jenkins';
     statusBar.show();
 }
 

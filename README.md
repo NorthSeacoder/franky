@@ -1,13 +1,24 @@
-# franky
+# Franky
 
-franky is a convenient toolkit.
+<h1 align="center">Franky <sup>VS Code</sup></h1>
+<p align="center">
+<a href="https://marketplace.visualstudio.com/items?itemName=NorthSeacoder.franky" target="__blank"><img src="https://img.shields.io/visual-studio-marketplace/v/antfu.ext-name.svg?color=eee&amp;label=VS%20Code%20Marketplace&logo=visual-studio-code" alt="Visual Studio Marketplace Version" /></a>
+</p>
+<p align="center">
+A convenient toolkit<br>
+</p>
+
+<p align="center">
+refactor with  <a href="https://github.com/antfu/starter-vscode">starter-vscode</a>
+</p>
+
 
 ## Features
 
 ### fileheader
-Add notes to the file header, and supports automatic update file modification time.
+Add notes to the file header, and support automatic update of the modification time of the file.
 
-support .vue and .js
+support vue/jsx/tsx..
 
 0 config,franky will get author name from git config,
 
@@ -35,9 +46,10 @@ eg:
 ```
 #### hot key
 
-`ctrl+alt+i` You can insert comments in the head.\
+`ctrl+alt+i` You can insert comments in the head.
 
-### diffLog
+
+<!-- ### diffLog
 
 匹配的远程分支命名格式:[项目名][tag] msg  
 主要在自己公司用....
@@ -46,4 +58,4 @@ eg:
 
 有两种展示方式:
  - commits + revert
- - 全commits:之前revert的original commit ,按提交时间排序
+ - 全commits:之前revert的original commit ,按提交时间排序 -->

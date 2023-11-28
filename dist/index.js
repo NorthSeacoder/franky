@@ -34,7 +34,7 @@ __export(src_exports, {
   deactivate: () => deactivate
 });
 module.exports = __toCommonJS(src_exports);
-var import_vscode4 = require("vscode");
+var import_vscode6 = require("vscode");
 
 // src/common/utils/log.ts
 var import_vscode = require("vscode");
@@ -132,19 +132,46 @@ var fileheaderUpdate = (document) => {
   }
 };
 
+// src/extentions/jenkins/index.ts
+var import_vscode5 = require("vscode");
+
+// src/common/utils/config.ts
+var import_vscode4 = require("vscode");
+function getConfig(key, v) {
+  return import_vscode4.workspace.getConfiguration().get(`franky.${key}`, v);
+}
+var config_default = {
+  get root() {
+    var _a, _b, _c;
+    return ((_c = (_b = (_a = import_vscode4.workspace.workspaceFolders) == null ? void 0 : _a[0]) == null ? void 0 : _b.uri) == null ? void 0 : _c.fsPath) || "";
+  },
+  get jenkinsUrl() {
+    var _a;
+    return (_a = getConfig("jenkins.url")) != null ? _a : "";
+  }
+};
+
+// src/extentions/jenkins/index.ts
+var jenkins_default = () => {
+  const url = config_default.jenkinsUrl;
+  log.debug(url);
+  import_vscode5.env.openExternal(import_vscode5.Uri.parse(url));
+};
+
 // src/index.ts
-function activate(context) {
+function activate({ subscriptions }) {
   log.debug('"franky" is now active!');
-  context.subscriptions.push(import_vscode4.commands.registerCommand("franky.fileheader", fileheader_default));
-  import_vscode4.workspace.onDidSaveTextDocument((file) => {
+  import_vscode6.commands.registerCommand("franky.fileheader", fileheader_default);
+  import_vscode6.commands.registerCommand("franky.jenkins", jenkins_default);
+  import_vscode6.workspace.onDidSaveTextDocument((file) => {
     setTimeout(() => {
       fileheaderUpdate(file);
     }, 200);
   });
-  const statusBar = import_vscode4.window.createStatusBarItem(import_vscode4.StatusBarAlignment.Left, 0);
-  statusBar.command = "openInGitHub.openProject";
-  statusBar.text = "$(github)";
-  statusBar.tooltip = "Open in GitHub";
+  const statusBar = import_vscode6.window.createStatusBarItem(import_vscode6.StatusBarAlignment.Left, 0);
+  statusBar.command = "franky.jenkins";
+  statusBar.text = "Jenkins";
+  statusBar.tooltip = "Jump to Jenkins";
   statusBar.show();
 }
 function deactivate() {

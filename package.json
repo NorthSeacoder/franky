@@ -53,7 +53,14 @@
         ],
         "configuration": {
             "type": "object",
-            "title": "franky-fileheader Configuration"
+            "title": "franky Configuration",
+            "properties": {
+                "franky.jenkins.url": {
+                    "type": "string",
+                    "default": "https://www.jenkins.io/",
+                    "description": "your jenkins url,default value is jenkins's homepage"
+                }
+            }
         }
     },
     "scripts": {
