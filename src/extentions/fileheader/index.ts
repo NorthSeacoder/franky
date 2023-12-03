@@ -11,7 +11,7 @@ interface ITemplate {
     time: string;
     LastModifiedTime: string;
 }
-const getTemplate = ({langId, name, time, LastModifiedTime}: ITemplate): string => {
+export const getTemplate = ({langId, name, time, LastModifiedTime}: ITemplate): string => {
     return (
         langId !== 'vue'
             ? [

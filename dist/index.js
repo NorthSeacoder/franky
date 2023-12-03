@@ -34,7 +34,8 @@ __export(src_exports, {
   deactivate: () => deactivate
 });
 module.exports = __toCommonJS(src_exports);
-var import_vscode6 = require("vscode");
+var import_vscode8 = require("vscode");
+var import_child_process2 = require("child_process");
 
 // src/common/utils/log.ts
 var import_vscode = require("vscode");
@@ -47,6 +48,13 @@ var log = {
   log(...args) {
     channel.appendLine(args.map((i) => String(i)).join(" "));
   }
+};
+
+// src/common/context.ts
+var ctx = {
+  active: false,
+  login: false,
+  name: "franky"
 };
 
 // src/extentions/fileheader/index.ts
@@ -66,6 +74,12 @@ var getRangeFromDocument = (document, lineIndex, startSplitor, endSplitor) => {
   }
   return range.with(startPosition, endPosition);
 };
+function camelCase(input) {
+  return input.replace(/-([a-z])/g, (_, match) => match.toUpperCase());
+}
+function upperFirst(input) {
+  return input.charAt(0).toUpperCase() + input.slice(1);
+}
 
 // src/extentions/fileheader/index.ts
 var import_dayjs = __toESM(require("dayjs"));
@@ -158,17 +172,532 @@ var jenkins_default = () => {
   import_vscode5.env.openExternal(import_vscode5.Uri.parse(url));
 };
 
+// src/extentions/generate/index.ts
+var import_vscode7 = require("vscode");
+
+// src/common/utils/file.ts
+var import_vscode6 = require("vscode");
+async function writeFile(path, content) {
+  return import_vscode6.workspace.fs.writeFile(import_vscode6.Uri.file(path), new Uint8Array(Buffer.from(content)));
+}
+
+// src/extentions/generate/templates/fileheader.ts
+var import_dayjs2 = __toESM(require("dayjs"));
+var fileheader_default2 = (langId) => {
+  const name = ctx.name;
+  const time = (0, import_dayjs2.default)().format("YYYY-MM-DD HH:mm:ss");
+  return getTemplate({ name, langId, time, LastModifiedTime: time });
+};
+
+// src/extentions/generate/templates/fields.ts
+var fields_default = () => {
+  const langId = "typescript";
+  const fileheader = fileheader_default2(langId);
+  return `${fileheader}
+
+import {defineFields} from '@yqg/type';
+
+export default defineFields({
+    name: {field: 'name', label: '\u540D\u79F0'},
+});
+`;
+};
+
+// src/extentions/generate/templates/options.ts
+var options_default = () => {
+  const langId = "typescript";
+  const fileheader = fileheader_default2(langId);
+  return `${fileheader}
+
+import {defineForm, defineTable} from '@yqg/type';
+
+import {fixedRight,op} from 'src/common/constant/fields';
+
+import Fields from './fields';
+
+export const FormOptions = Object.freeze(defineForm({
+    fieldDefs: [
+        Fields.name,
+    ]
+}));
+
+export const EditModalFormOptions = Object.freeze(defineForm({
+    fieldDefs: [
+        Fields.name,
+    ]
+}));
+
+export const DetailFormOptions = Object.freeze(defineForm({
+    fieldDefs: [
+        Fields.name,
+    ]
+}));
+
+export const TableOptions = Object.freeze(defineTable({
+    colDefs: [
+        Fields.name,
+        fixedRight(op)
+    ]
+}));
+`;
+};
+
+// src/extentions/generate/templates/vue.ts
+var vue_default = ({ name, componentName }) => {
+  const langId = "vue";
+  const fileheader = fileheader_default2(langId);
+  return `${fileheader}
+
+<template>
+    <div class="${componentName}">
+        <yqg-simple-form
+            auto-search
+            :options="FormOptions"
+            confirm-label="common.query"
+            @confirm="onSearch"
+            @reset="onSearch"
+        >
+            <template #extraBtns>
+                <a-button
+                    v-show="isAuthorized(Permissions.CONFIG_CREATE)"
+                    @click="openEditModal()"
+                    v-text="'\u65B0\u5EFA'"
+                />
+            </template>
+        </yqg-simple-form>
+        <yqg-simple-table
+            :options="TableOptions"
+            :records="records"
+            :pagination="pagination"
+            @change="onTableChange"
+        >
+            <template #op="{ record }">
+                <a-button
+                    size="small"
+                    @click="openDetailModal(record)"
+                >
+                    \u67E5\u770B
+                </a-button>
+                <a-button
+                    size="small"
+                    :disabled="record.distributed"
+                    @click="openEditModal(record)"
+                >
+                    \u7F16\u8F91
+                </a-button>
+                <a-popconfirm
+                    title="\u662F\u5426\u786E\u8BA4\u5220\u9664"
+                    @confirm="deleteRecord(record)"
+                >
+                    <a-button
+                        size="small"
+                        type="danger"
+                    >
+                        \u5220\u9664
+                    </a-button>
+                </a-popconfirm>
+            </template>
+        </yqg-simple-table>
+    </div>
+</template>
+
+<script type="text/babel">
+import {table} from 'src/common/mixin';
+import Xxx from 'src/common/resource/xxx';
+
+import {FormOptions, TableOptions} from './constant/options';
+import DetailModal from './modal/detail-modal';
+import EditModal from './modal/edit-modal';
+
+export default {
+    name: '${name}',
+
+    mixins: [table],
+
+    inject: ['isAuthorized', 'Permissions'],
+
+    data() {
+        return {
+            records: [],
+            FormOptions,
+            TableOptions
+        };
+    },
+
+    methods: {
+        async onRefresh() {
+            const {params} = this;
+            const {
+                data: {body}
+            } = await Xxx.get({params});
+            this.pagination.total = body.length;
+            this.records = body;
+        },
+
+        openEditModal(record) {
+            this.$modal.open(EditModal, {record}).then(this.onRefresh);
+        },
+
+        openDetailModal(record) {
+            this.$modal.open(DetailModal, {record}).then(this.onRefresh);
+        },
+
+        deleteRecord(record) {
+            Xxx.delete(record).then(() => {
+                this.onRefresh();
+            });
+        }
+    }
+};
+
+</script>
+
+<style lang="scss" scoped>
+
+</style>
+
+`;
+};
+
+// src/extentions/generate/templates/react.ts
+var react_default = () => {
+  const langId = "typescript";
+  const fileheader = fileheader_default2(langId);
+  return `${fileheader}
+
+import {Button} from 'antd';
+import {useState} from 'react';
+import {useTranslation} from 'react-i18next';
+import {connect} from 'react-redux';
+
+import {useModal} from '@yqg/react';
+import YqgSimpleForm from '@yqg/react/src/component/yqg-simple-form';
+import YqgSimpleTable from '@yqg/react/src/component/yqg-simple-table';
+
+import saveFileFromResponse from 'yqg-common/utils/save-file';
+
+import Xxx from 'common/resource/xxx';
+import YqgPrivilege from 'common/component/yqg-privilege';
+import {PRIVILEGE_DEMO} from 'common/constant/basic/privilege';
+import {ApiParams, usePagination} from 'common/hook';
+import {isAuthorized} from 'common/util/privilege';
+
+import {FormOptions, TableOptions} from './constant/options';
+import EditModal from './modal/edit';
+
+type Props = {location: any, currentUser: object};
+const AccountManagement: React.FC<Props> = ({currentUser, location}) => {
+    const {t} = useTranslation();
+    const {query: {companyId}} = location;
+
+    const [records, setRecords] = useState<any[]>(null);
+
+    const {
+        onSearchNext,
+        onRefresh
+    } = usePagination(fetchList);
+    const {open} = useModal();
+
+    async function fetchList({params}: ApiParams) {
+        const {data: {body}} = await Xxx.list({params: {
+            companyId, ...params
+        }});
+        setRecords(body);
+    }
+
+    const onExport = async ({form}) => {
+        const params = form.getFieldsValue();
+        const res = await Xxx.export({params: {
+            companyId, ...params
+        }, responseType: 'blob'});
+        saveFileFromResponse(res);
+    };
+
+    const onEdit = (record?: any) => {
+        open(EditModal, {record, location}).then(onRefresh, x => x);
+    };
+
+    const extraBtns = formCtx => (
+        <YqgPrivilege
+            hasAny={[PRIVILEGE_DEMO]}
+        >
+            <Button
+                type="primary"
+                onClick={() => onEdit()}
+            >
+                {t('common.submit')}
+            </Button>
+            <Button onClick={() => onExport(formCtx)}>
+                {t('common.export')}
+            </Button>
+        </YqgPrivilege>
+    );
+
+    return (
+        <>
+            <YqgSimpleForm
+                {...{
+                    autoSearch: true,
+                    tagVisible: true,
+                    options: FormOptions,
+                    onConfirm: onSearchNext,
+                    onReset: onSearchNext,
+                    extraBtns,
+                    confirmLabel: 'common.query',
+                    ctx: {companyId}
+                }}
+            />
+            <YqgSimpleTable
+                {...{
+                    options: TableOptions,
+                    records,
+                    ctx: {onEdit, companyId, currentUser, isAuthorized}
+                }}
+            />
+        </>
+    );
+};
+
+export default connect(state => ({currentUser: state.user}))(AccountManagement);
+`;
+};
+
+// src/extentions/generate/templates/modal-vue.ts
+var EditModalTpl = ({ name }) => {
+  const langId = "vue";
+  const fileheader = fileheader_default2(langId);
+  return `${fileheader}
+
+<template>
+    <yqg-simple-form
+        :title="title"
+        :options="EditModalFormOptions"
+        :values="record"
+        @confirm="onConfirm"
+        @cancel="dismiss"
+    />
+</template>
+
+<script type="text/babel">
+
+import {modal} from 'src/common/mixin';
+import Xxx from 'src/common/resource/xxx';
+
+import {EditModalFormOptions} from '../constant/options';
+
+export default {
+    name: '${name}',
+
+    mixins: [modal],
+
+    inject: ['opSuccess'],
+
+    props: {
+        record: {
+            type: Object,
+            default: () => ({})
+        }
+    },
+
+    data() {
+        return {
+            EditModalFormOptions,
+        };
+    },
+
+    computed: {
+        title() {
+            return this.record.id ? '\u7F16\u8F91' : '\u521B\u5EFA';
+        }
+    },
+
+    methods: {
+        async onConfirm({record}) {
+            await Xxx.save(record);
+            this.opSuccess();
+            this.close();
+        }
+    }
+};
+</script>
+`;
+};
+var DetailModalTpl = ({ name }) => {
+  const langId = "vue";
+  const fileheader = fileheader_default2(langId);
+  return `${fileheader}
+
+<template>
+    <yqg-static-form
+        title="\u8BE6\u60C5"
+        :options="DetailFormOptions"
+        :values="record"
+    />
+</template>
+
+<script type="text/babel">
+import {modal} from 'src/common/mixin';
+
+import {DetailFormOptions} from '../constant/options';
+
+export default {
+    name: '${name}',
+
+    onlyClose: true,
+
+    mixins: [modal],
+
+    props: {
+        record: {
+            type: Object,
+            default: () => ({})
+        }
+    },
+
+    data() {
+        return {
+            DetailFormOptions
+        };
+    }
+};
+</script>
+`;
+};
+
+// src/extentions/generate/templates/modal-react.ts
+var modal_react_default = () => {
+  const langId = "typescript";
+  const fileheader = fileheader_default2(langId);
+  return `${fileheader}
+
+import {useState} from 'react';
+import {useTranslation} from 'react-i18next';
+
+import YqgSimpleForm from '@yqg/react/src/component/yqg-simple-form';
+
+import Xxx from 'common/resource/xxx';
+import YqgToast from 'common/util/yqg-toast';
+
+import {FormOptions} from '../constant/options';
+
+type Props = {
+    record?: any,
+    close: (value?: any) => void,
+    dismiss: (reason?: any) => void,
+    location: any
+};
+
+const EditModal: React.FC<Props> = ({record, dismiss, close, location}) => {
+    const {t} = useTranslation();
+    const {query: {companyId}} = location;
+    const [values, setValues] = useState({companyId, ...record});
+
+    const onConfirm = async ({record}) => {
+        await Xxx.save(record);
+        YqgToast.success(t('common.submitSuccess'));
+        close();
+    };
+
+    const onChange = ({record: newRecord}) => {
+        setValues(newRecord);
+    };
+
+    return (
+        <YqgSimpleForm {...{
+            title: record?.id ? t('editAccount') : t('addAccount'),
+            values,
+            options: FormOptions,
+            onCancel: dismiss,
+            onConfirm,
+            onChange,
+            ctx: {companyId, setValues}
+        }}
+        />
+    );
+};
+
+export default EditModal;
+`;
+};
+
+// src/extentions/generate/index.ts
+var VueGeneratorStrategy = class {
+  async generate(uri, componentName) {
+    const { path } = uri;
+    const name = upperFirst(camelCase(componentName));
+    await writeFile(`${path}/index.vue`, vue_default({ name, componentName }));
+    await writeFile(`${path}/constant/fields.ts`, fields_default());
+    await writeFile(`${path}/constant/options.ts`, options_default());
+    await this.generateModal(uri, name);
+  }
+  async generateModal(uri, name) {
+    const modalUri = import_vscode7.Uri.file(`${uri.path}/modal`);
+    await writeFile(`${modalUri.path}/edit-modal.vue`, EditModalTpl({ name }));
+    await writeFile(`${modalUri.path}/detail-modal.vue`, DetailModalTpl({ name }));
+  }
+};
+var ReactGeneratorStrategy = class {
+  async generate(uri) {
+    const { path } = uri;
+    await writeFile(`${path}/index.tsx`, react_default());
+    await writeFile(`${path}/constant/fields.ts`, fields_default());
+    await writeFile(`${path}/constant/options.ts`, options_default());
+    await this.generateModal(uri);
+  }
+  async generateModal(uri) {
+    const { path } = uri;
+    await writeFile(`${path}/modal/edit-modal.tsx`, modal_react_default());
+  }
+};
+var generatePage = async (uri, generatorStrategy) => {
+  try {
+    const componentName = await import_vscode7.window.showInputBox({
+      prompt: "component-name in kebab-case"
+    });
+    if (!componentName) {
+      return import_vscode7.window.showErrorMessage("No component name passed");
+    }
+    const regex = /^[a-z]+(-[a-z]+)*$/;
+    if (!regex.test(componentName)) {
+      return import_vscode7.window.showErrorMessage("component-name must be in kebab-case");
+    }
+    const compUri = import_vscode7.Uri.file(`${uri.path}/${componentName}`);
+    await generatorStrategy.generate(compUri, componentName);
+  } catch (error) {
+    log.debug(error);
+  }
+};
+var genVuePage = async (uri) => {
+  if (!uri) {
+    return import_vscode7.window.showErrorMessage("No file path found.");
+  }
+  const generatorStrategy = new VueGeneratorStrategy();
+  await generatePage(uri, generatorStrategy);
+};
+var genReactPage = async (uri) => {
+  if (!uri) {
+    return import_vscode7.window.showErrorMessage("No file path found.");
+  }
+  const generatorStrategy = new ReactGeneratorStrategy();
+  await generatePage(uri, generatorStrategy);
+};
+
 // src/index.ts
-function activate({ subscriptions }) {
+function activate({ globalState }) {
   log.debug('"franky" is now active!');
-  import_vscode6.commands.registerCommand("franky.fileheader", fileheader_default);
-  import_vscode6.commands.registerCommand("franky.jenkins", jenkins_default);
-  import_vscode6.workspace.onDidSaveTextDocument((file) => {
+  ctx.active = true;
+  const name = (0, import_child_process2.execSync)("git config --get user.name").toString().trim();
+  ctx.name = name;
+  import_vscode8.commands.registerCommand("franky.fileheader", fileheader_default);
+  import_vscode8.commands.registerCommand("franky.jenkins", jenkins_default);
+  import_vscode8.commands.registerCommand("franky.generate.vue", genVuePage);
+  import_vscode8.commands.registerCommand("franky.generate.react", genReactPage);
+  import_vscode8.workspace.onDidSaveTextDocument((file) => {
     setTimeout(() => {
       fileheaderUpdate(file);
     }, 200);
   });
-  const statusBar = import_vscode6.window.createStatusBarItem(import_vscode6.StatusBarAlignment.Left, 0);
+  const statusBar = import_vscode8.window.createStatusBarItem(import_vscode8.StatusBarAlignment.Left, 0);
   statusBar.command = "franky.jenkins";
   statusBar.text = "Jenkins";
   statusBar.tooltip = "Jump to Jenkins";

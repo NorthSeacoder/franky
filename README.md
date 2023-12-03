@@ -48,6 +48,20 @@ eg:
 
 `ctrl+alt+i` You can insert comments in the head.
 
+### jenkins
+
+Add a button to go to the Jenkins on the status bar.
+
+#### seetings
+
+```js
+{
+  "franky.jenkins.url": "https://www.jenkins.io/", // Custom Jenkins url
+}
+```
+### generate
+
+Generate code snippets for vue/react pages
 
 <!-- ### diffLog
 

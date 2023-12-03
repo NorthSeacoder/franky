@@ -37,6 +37,40 @@
             {
                 "command": "franky.diffLog",
                 "title": "diffLog"
+            },
+            {
+                "command": "franky.generate.vue",
+                "title": "生成新页面(vue)"
+            },
+            {
+                "command": "franky.generate.react",
+                "title": "生成新页面(react)"
+            }
+        ],
+        "menus": {
+            "explorer/context": [
+                {
+                    "submenu": "franky.editorAction",
+                    "group": "navigation@1"
+                }
+            ],
+            "franky.editorAction": [
+                {
+                    "command": "franky.generate.vue",
+                    "group": "1_franky@1",
+                    "when": "explorerResourceIsFolder"
+                },
+                {
+                    "command": "franky.generate.react",
+                    "group": "1_franky@2",
+                    "when": "explorerResourceIsFolder"
+                }
+            ]
+        },
+        "submenus": [
+            {
+                "id": "franky.editorAction",
+                "label": "Franky"
             }
         ],
         "keybindings": [

@@ -6,13 +6,18 @@
 	"version": "0.2.0",
 	"configurations": [
 		{
-			"name": "Run Extension",
+			"name": "Run Franky",
 			"type": "extensionHost",
 			"request": "launch",
+			"runtimeExecutable": "${execPath}",
 			"args": [
 				"--disable-extensions",
 				"--extensionDevelopmentPath=${workspaceFolder}"
-			]
+			],
+			"outFiles": [
+				"${workspaceFolder}/dist/**/*.js"
+			  ],
+			"preLaunchTask": "npm: dev",
 		},
 		{
 			"name": "Extension Tests",
