@@ -2,7 +2,7 @@
     "name": "franky",
     "displayName": "Franky",
     "description": "tools in work",
-    "version": "0.1.1",
+    "version": "0.3.0",
     "engines": {
         "vscode": "^1.83.0",
         "node": ">=18"
@@ -23,30 +23,38 @@
         "multi-root ready"
     ],
     "activationEvents": [
-        "*"
+        "onStartupFinished"
     ],
     "main": "./dist/index.js",
+    "files": [
+        "dist"
+    ],
     "contributes": {
         "commands": [
             {
                 "command": "franky.fileheader",
-                "title": "fileheader"
+                "title": "fileheader",
+                "category": "Franky"
             },
             {
                 "command": "franky.diffLog",
-                "title": "diffLog"
+                "title": "diffLog",
+                "category": "Franky"
             },
             {
                 "command": "franky.jenkins",
-                "title": "跳转jenkins"
+                "title": "跳转jenkins",
+                "category": "Franky"
             },
             {
                 "command": "franky.generate.vue",
-                "title": "生成新页面(vue)"
+                "title": "生成新页面(vue)",
+                "category": "Franky"
             },
             {
                 "command": "franky.generate.react",
-                "title": "生成新页面(react)"
+                "title": "生成新页面(react)",
+                "category": "Franky"
             }
         ],
         "menus": {
@@ -106,8 +114,8 @@
         "dev": "nr build --watch",
         "lint": "eslint .",
         "vscode:prepublish": "nr build",
-        "publish": "vsce publish --no-dependencies",
-        "pack": "vsce package --no-dependencies",
+        "publish": "vsce publish",
+        "pack": "vsce package",
         "test": "vitest",
         "typecheck": "tsc --noEmit",
         "release": "bumpp && nr publish"
@@ -123,21 +131,16 @@
         "@vscode/vsce": "^2.22.0",
         "bumpp": "^9.2.0",
         "eslint": "^8.53.0",
-        "esno": "^4.0.0",
-        "pnpm": "^8.10.5",
-        "rimraf": "^5.0.5",
         "tsup": "^7.2.0",
         "typescript": "^5.2.2",
-        "vite": "^4.5.0",
-        "vitest": "^0.34.6"
+        "vitest": "^0.34.6",
+        "dayjs": "^1.10.7",
+        "simple-git": "^2.47.0"
     },
     "config": {
         "commitizen": {
             "path": "cz-conventional-changelog"
         }
     },
-    "dependencies": {
-        "dayjs": "^1.10.7",
-        "simple-git": "^2.47.0"
-    }
+    "dependencies": {}
 }

@@ -1,28 +1,24 @@
-import {workspace, commands, window, StatusBarAlignment} from 'vscode';
-import type {ExtensionContext} from 'vscode';
-import {execSync} from 'child_process';
+import { execSync } from 'child_process';
+import type { ExtensionContext } from 'vscode';
+import { StatusBarAlignment, commands, window, workspace } from 'vscode';
 
-import {log} from '@utils/log';
-import {ctx} from '@common/context';
-import fileheader, {fileheaderUpdate} from '@extentions/fileheader';
+import { ctx } from '@common/context';
+import fileheader, { fileheaderUpdate } from '@extentions/fileheader';
+import { genReactPage, genVuePage } from '@extentions/generate';
 import jenkins from '@extentions/jenkins';
-import {genVuePage,genReactPage} from '@extentions/generate';
+import { log } from '@utils/log';
 
-export function activate({globalState}: ExtensionContext) {
+export function activate({subscriptions}: ExtensionContext) {
     log.debug('"franky" is now active!');
     ctx.active = true;
     const name = execSync('git config --get user.name').toString().trim();
     ctx.name = name;
-    commands.registerCommand('franky.fileheader', fileheader);
-    commands.registerCommand('franky.jenkins', jenkins);
-    commands.registerCommand('franky.generate.vue', genVuePage);
-    commands.registerCommand('franky.generate.react', genReactPage);
-    // commands.registerCommand('franky.generate.fields', genFields);
-    // commands.registerCommand('franky.generate.options', genOptions);
-    // commands.registerCommand('franky.generate.modal', genModal);
-    // subscriptions
-    //     .push(commands.registerCommand('franky.fileheader', fileheader))
-    //     .push(commands.registerCommand('franky.jenkins', jenkins));
+    subscriptions.push(
+        commands.registerCommand('franky.fileheader', fileheader),
+        commands.registerCommand('franky.jenkins', jenkins),
+        commands.registerCommand('franky.generate.vue', genVuePage),
+        commands.registerCommand('franky.generate.react', genReactPage)
+    );
     // window.showInformationMessage('Hello')
 
     workspace.onDidSaveTextDocument((file) => {
