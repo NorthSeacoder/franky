@@ -23,9 +23,7 @@
         "multi-root ready"
     ],
     "activationEvents": [
-        "onLanguage:javascript",
-        "onLanguage:typescript",
-        "onLanguage:vue"
+        "*"
     ],
     "main": "./dist/index.js",
     "contributes": {
@@ -37,6 +35,10 @@
             {
                 "command": "franky.diffLog",
                 "title": "diffLog"
+            },
+            {
+                "command": "franky.jenkins",
+                "title": "跳转jenkins"
             },
             {
                 "command": "franky.generate.vue",
