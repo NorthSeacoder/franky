@@ -388,12 +388,14 @@ var getTemplate = ({ langId, name, time, LastModifiedTime }) => {
     ` * @Date: ${time}`,
     ` * @Last Modified by: ${name}`,
     ` * @Last Modified time: ${LastModifiedTime}`,
-    " */"
+    " */\n\n"
   ] : [
     `<!-- @Author: ${name} -->`,
     `<!-- @Date: ${time} -->`,
     `<!-- @Last Modified by: ${name} -->`,
-    `<!-- @Last Modified time: ${LastModifiedTime} -->`
+    `<!-- @Last Modified time: ${LastModifiedTime} -->
+
+`
   ]).join("\n");
 };
 var fileheader_default = () => {

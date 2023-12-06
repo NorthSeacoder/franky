@@ -20,13 +20,13 @@ export const getTemplate = ({langId, name, time, LastModifiedTime}: ITemplate): 
                   ` * @Date: ${time}`,
                   ` * @Last Modified by: ${name}`,
                   ` * @Last Modified time: ${LastModifiedTime}`,
-                  ' */'
+                  ' */\n\n',
               ]
             : [
                   `<!-- @Author: ${name} -->`,
                   `<!-- @Date: ${time} -->`,
                   `<!-- @Last Modified by: ${name} -->`,
-                  `<!-- @Last Modified time: ${LastModifiedTime} -->`
+                  `<!-- @Last Modified time: ${LastModifiedTime} -->\n\n`,
               ]
     ).join('\n');
 };
