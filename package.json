@@ -2,7 +2,7 @@
     "name": "franky",
     "displayName": "Franky",
     "description": "tools in work",
-    "version": "1.0.1",
+    "version": "1.0.2",
     "engines": {
         "vscode": "^1.83.0",
         "node": ">=18"
@@ -110,8 +110,8 @@
     "scripts": {
         "cz": "git add . && git-cz",
         "cl": "conventional-changelog -p angular -i CHANGELOG.md -s -r 0",
-        "build": "tsup src/index.ts --external vscode",
-        "dev": "nr build --watch",
+        "build": "tsup src/index.ts --external vscode --minify",
+        "dev": "tsup src/index.ts --external vscode  --watch --sourcemap",
         "lint": "eslint .",
         "vscode:prepublish": "nr build",
         "publish": "vsce publish",
