@@ -2,7 +2,7 @@
     "name": "franky",
     "displayName": "Franky",
     "description": "tools in work",
-    "version": "1.0.2",
+    "version": "1.1.0",
     "engines": {
         "vscode": "^1.83.0",
         "node": ">=18"
@@ -106,7 +106,7 @@
                 }
             }
         },
-        "snippets":[
+        "snippets": [
             {
                 "language": "typescript",
                 "path": "./snippets/common.json"
