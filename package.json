@@ -105,7 +105,29 @@
                     "description": "your jenkins url,default value is jenkins's homepage"
                 }
             }
-        }
+        },
+        "snippets":[
+            {
+                "language": "typescript",
+                "path": "./snippets/common.json"
+            },
+            {
+                "language": "vue",
+                "path": "./snippets/common.json"
+            },
+            {
+                "language": "javascript",
+                "path": "./snippets/common.json"
+            },
+            {
+                "language": "typescriptreact",
+                "path": "./snippets/common.json"
+            },
+            {
+                "language": "javascriptreact",
+                "path": "./snippets/common.json"
+            }
+        ]
     },
     "scripts": {
         "cz": "git add . && git-cz",

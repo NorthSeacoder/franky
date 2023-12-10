@@ -1,9 +1,8 @@
-import genFH from './fileheader';
+// import genFH from './fileheader';
 export default () => {
     const langId = 'typescript';
-    const fileheader = genFH(langId);
-    return `${fileheader}
-
+    // const fileheader = genFH(langId);
+    return `
 import {useState} from 'react';
 import {useTranslation} from 'react-i18next';
 

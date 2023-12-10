@@ -1,9 +1,8 @@
-import genFH from './fileheader';
+// import genFH from './fileheader';
 export default () => {
     const langId = 'typescript';
-    const fileheader = genFH(langId);
-    return `${fileheader}
-
+    // const fileheader = genFH(langId);
+    return `
 import {defineForm, defineTable} from '@yqg/type';
 
 import {fixedRight,op} from 'src/common/constant/fields';

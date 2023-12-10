@@ -13,6 +13,7 @@ export function activate({subscriptions}: ExtensionContext) {
     ctx.active = true;
     const name = execSync('git config --get user.name').toString().trim();
     ctx.name = name;
+    console.log('',);
     subscriptions.push(
         commands.registerCommand('franky.fileheader', fileheader),
         commands.registerCommand('franky.jenkins', jenkins),

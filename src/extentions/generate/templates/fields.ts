@@ -1,9 +1,8 @@
-import genFH from './fileheader';
+// import genFH from './fileheader';
 export default ():string => {
     const langId = 'typescript';
-    const fileheader = genFH(langId);
-    return `${fileheader}
-
+    // const fileheader = genFH(langId);
+    return `
 import {defineFields} from '@yqg/type';
 
 export default defineFields({

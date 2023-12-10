@@ -33,10 +33,10 @@ class VueGeneratorStrategy implements GeneratorStrategy {
     }
 }
 class ReactGeneratorStrategy implements GeneratorStrategy {
-    async generate(uri: Uri): Promise<void> {
+    async generate(uri: Uri,componentName: string): Promise<void> {
         const {path} = uri;
-
-        await writeFile(`${path}/index.tsx`, ReactIndexTpl());
+        const name = upperFirst(camelCase(componentName));
+        await writeFile(`${path}/index.tsx`, ReactIndexTpl(name));
         await writeFile(`${path}/constant/fields.ts`, FieldTpl());
         await writeFile(`${path}/constant/options.ts`, OptionsTpl());
         await this.generateModal(uri);

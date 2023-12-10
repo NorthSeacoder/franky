@@ -1,9 +1,8 @@
-import genFH from './fileheader';
-export default () => {
+// import genFH from './fileheader';
+export default (name: string) => {
     const langId = 'typescript';
-    const fileheader = genFH(langId);
-    return `${fileheader}
-
+    // const fileheader = genFH(langId);
+    return `
 import {Button} from 'antd';
 import {useState} from 'react';
 import {useTranslation} from 'react-i18next';
@@ -25,7 +24,7 @@ import {FormOptions, TableOptions} from './constant/options';
 import EditModal from './modal/edit';
 
 type Props = {location: any, currentUser: object};
-const AccountManagement: React.FC<Props> = ({currentUser, location}) => {
+const ${name}: React.FC<Props> = ({currentUser, location}) => {
     const {t} = useTranslation();
     const {query: {companyId}} = location;
 
@@ -97,5 +96,5 @@ const AccountManagement: React.FC<Props> = ({currentUser, location}) => {
     );
 };
 
-export default connect(state => ({currentUser: state.user}))(AccountManagement);
+export default connect(state => ({currentUser: state.user}))(${name});
 `}

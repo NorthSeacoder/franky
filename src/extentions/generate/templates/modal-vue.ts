@@ -1,10 +1,9 @@
-import genFH from './fileheader';
+// import genFH from './fileheader';
 
 export const EditModalTpl = ({name}: {name: string}) => {
     const langId = 'vue';
-    const fileheader = genFH(langId);
-    return `${fileheader}
-
+    // const fileheader = genFH(langId);
+    return `
 <template>
     <yqg-simple-form
         :title="title"
@@ -62,9 +61,8 @@ export default {
 
 export const DetailModalTpl = ({name}: {name: string}) => {
     const langId = 'vue';
-    const fileheader = genFH(langId);
-    return `${fileheader}
-
+    // const fileheader = genFH(langId);
+    return `
 <template>
     <yqg-static-form
         title="详情"

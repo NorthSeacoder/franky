@@ -455,20 +455,10 @@ async function writeFile(path, content) {
   return import_vscode4.workspace.fs.writeFile(import_vscode4.Uri.file(path), new Uint8Array(Buffer.from(content)));
 }
 
-// src/extentions/generate/templates/fileheader.ts
-var import_dayjs2 = __toESM(require_dayjs_min());
-var fileheader_default2 = (langId) => {
-  const name = ctx.name;
-  const time = (0, import_dayjs2.default)().format("YYYY-MM-DD HH:mm:ss");
-  return getTemplate({ name, langId, time, LastModifiedTime: time });
-};
-
 // src/extentions/generate/templates/fields.ts
 var fields_default = () => {
   const langId = "typescript";
-  const fileheader = fileheader_default2(langId);
-  return `${fileheader}
-
+  return `
 import {defineFields} from '@yqg/type';
 
 export default defineFields({
@@ -480,9 +470,7 @@ export default defineFields({
 // src/extentions/generate/templates/options.ts
 var options_default = () => {
   const langId = "typescript";
-  const fileheader = fileheader_default2(langId);
-  return `${fileheader}
-
+  return `
 import {defineForm, defineTable} from '@yqg/type';
 
 import {fixedRight,op} from 'src/common/constant/fields';
@@ -519,9 +507,7 @@ export const TableOptions = Object.freeze(defineTable({
 // src/extentions/generate/templates/vue.ts
 var vue_default = ({ name, componentName }) => {
   const langId = "vue";
-  const fileheader = fileheader_default2(langId);
-  return `${fileheader}
-
+  return `
 <template>
     <div class="${componentName}">
         <yqg-simple-form
@@ -634,11 +620,9 @@ export default {
 };
 
 // src/extentions/generate/templates/react.ts
-var react_default = () => {
+var react_default = (name) => {
   const langId = "typescript";
-  const fileheader = fileheader_default2(langId);
-  return `${fileheader}
-
+  return `
 import {Button} from 'antd';
 import {useState} from 'react';
 import {useTranslation} from 'react-i18next';
@@ -660,7 +644,7 @@ import {FormOptions, TableOptions} from './constant/options';
 import EditModal from './modal/edit';
 
 type Props = {location: any, currentUser: object};
-const AccountManagement: React.FC<Props> = ({currentUser, location}) => {
+const ${name}: React.FC<Props> = ({currentUser, location}) => {
     const {t} = useTranslation();
     const {query: {companyId}} = location;
 
@@ -732,16 +716,14 @@ const AccountManagement: React.FC<Props> = ({currentUser, location}) => {
     );
 };
 
-export default connect(state => ({currentUser: state.user}))(AccountManagement);
+export default connect(state => ({currentUser: state.user}))(${name});
 `;
 };
 
 // src/extentions/generate/templates/modal-vue.ts
 var EditModalTpl = ({ name }) => {
   const langId = "vue";
-  const fileheader = fileheader_default2(langId);
-  return `${fileheader}
-
+  return `
 <template>
     <yqg-simple-form
         :title="title"
@@ -798,9 +780,7 @@ export default {
 };
 var DetailModalTpl = ({ name }) => {
   const langId = "vue";
-  const fileheader = fileheader_default2(langId);
-  return `${fileheader}
-
+  return `
 <template>
     <yqg-static-form
         title="\u8BE6\u60C5"
@@ -841,9 +821,7 @@ export default {
 // src/extentions/generate/templates/modal-react.ts
 var modal_react_default = () => {
   const langId = "typescript";
-  const fileheader = fileheader_default2(langId);
-  return `${fileheader}
-
+  return `
 import {useState} from 'react';
 import {useTranslation} from 'react-i18next';
 
@@ -911,9 +889,10 @@ var VueGeneratorStrategy = class {
   }
 };
 var ReactGeneratorStrategy = class {
-  async generate(uri) {
+  async generate(uri, componentName) {
     const { path } = uri;
-    await writeFile(`${path}/index.tsx`, react_default());
+    const name = upperFirst(camelCase(componentName));
+    await writeFile(`${path}/index.tsx`, react_default(name));
     await writeFile(`${path}/constant/fields.ts`, fields_default());
     await writeFile(`${path}/constant/options.ts`, options_default());
     await this.generateModal(uri);
@@ -988,6 +967,7 @@ function activate({ subscriptions }) {
   ctx.active = true;
   const name = (0, import_child_process2.execSync)("git config --get user.name").toString().trim();
   ctx.name = name;
+  console.log("");
   subscriptions.push(
     import_vscode8.commands.registerCommand("franky.fileheader", fileheader_default),
     import_vscode8.commands.registerCommand("franky.jenkins", jenkins_default),
@@ -1012,3 +992,4 @@ function deactivate() {
   activate,
   deactivate
 });
+//# sourceMappingURL=index.js.map
