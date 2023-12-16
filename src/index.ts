@@ -4,7 +4,7 @@ import { StatusBarAlignment, commands, window, workspace } from 'vscode';
 
 import { ctx } from '@common/context';
 import fileheader, { fileheaderUpdate } from '@extentions/fileheader';
-import { genReactPage, genVuePage } from '@extentions/generate';
+import { genReactPage, genVuePage,genDefs } from '@extentions/generate';
 import jenkins from '@extentions/jenkins';
 import { log } from '@utils/log';
 
@@ -13,12 +13,12 @@ export function activate({subscriptions}: ExtensionContext) {
     ctx.active = true;
     const name = execSync('git config --get user.name').toString().trim();
     ctx.name = name;
-    console.log('',);
     subscriptions.push(
         commands.registerCommand('franky.fileheader', fileheader),
         commands.registerCommand('franky.jenkins', jenkins),
         commands.registerCommand('franky.generate.vue', genVuePage),
-        commands.registerCommand('franky.generate.react', genReactPage)
+        commands.registerCommand('franky.generate.react', genReactPage),
+        commands.registerCommand('franky.generate.defs', genDefs)
     );
     // window.showInformationMessage('Hello')
 

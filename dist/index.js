@@ -934,6 +934,35 @@ var genReactPage = async (uri) => {
   const generatorStrategy = new ReactGeneratorStrategy();
   await generatePage(uri, generatorStrategy);
 };
+function parseStringToObject(str) {
+  const lines = str.split("\n");
+  const result = {};
+  for (const line of lines) {
+    let key, value;
+    if (line.includes(":")) {
+      [key, value] = line.split(":");
+    }
+    if (line.includes("\uFF1A")) {
+      [key, value] = line.split("\uFF1A");
+    }
+    if (!key || !value)
+      continue;
+    const field = key.replace(/[^a-zA-Z]|"/g, "");
+    const label = value.replace(/[^\u4e00-\u9fa5a-zA-Z]/g, "");
+    result[field] = { field, label };
+  }
+  return JSON.stringify(result, null, 4);
+}
+var genDefs = async () => {
+  let editor = import_vscode5.window.activeTextEditor;
+  if (!editor) {
+    return;
+  }
+  let selection = editor.selection;
+  let selectedText = editor.document.getText(selection);
+  await import_vscode5.env.clipboard.writeText(parseStringToObject(selectedText));
+  import_vscode5.window.showInformationMessage("\u5DF2\u5C06\u7ED3\u679C\u8BBE\u7F6E\u5230\u526A\u8D34\u677F");
+};
 
 // src/extentions/jenkins/index.ts
 var import_vscode7 = require("vscode");
@@ -967,12 +996,12 @@ function activate({ subscriptions }) {
   ctx.active = true;
   const name = (0, import_child_process2.execSync)("git config --get user.name").toString().trim();
   ctx.name = name;
-  console.log("");
   subscriptions.push(
     import_vscode8.commands.registerCommand("franky.fileheader", fileheader_default),
     import_vscode8.commands.registerCommand("franky.jenkins", jenkins_default),
     import_vscode8.commands.registerCommand("franky.generate.vue", genVuePage),
-    import_vscode8.commands.registerCommand("franky.generate.react", genReactPage)
+    import_vscode8.commands.registerCommand("franky.generate.react", genReactPage),
+    import_vscode8.commands.registerCommand("franky.generate.defs", genDefs)
   );
   import_vscode8.workspace.onDidSaveTextDocument((file) => {
     setTimeout(() => {

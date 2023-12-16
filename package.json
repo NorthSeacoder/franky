@@ -55,16 +55,34 @@
                 "command": "franky.generate.react",
                 "title": "生成新页面(react)",
                 "category": "Franky"
+            },
+            {
+                "command": "franky.generate.defs",
+                "title": "根据选中内容生成 def",
+                "category": "Franky"
             }
         ],
         "menus": {
             "explorer/context": [
+                {
+                    "submenu": "franky.explorerAction",
+                    "group": "navigation@1"
+                }
+            ],
+            "editor/context": [
                 {
                     "submenu": "franky.editorAction",
                     "group": "navigation@1"
                 }
             ],
             "franky.editorAction": [
+                {
+                    "command": "franky.generate.defs",
+                    "group": "1_franky@1",
+                    "when": "editorLangId == typescript || editorLangId == javascript || editorLangId == typescriptreact || editorLangId == javascriptreact"
+                }
+            ],
+            "franky.explorerAction": [
                 {
                     "command": "franky.generate.vue",
                     "group": "1_franky@1",
@@ -78,6 +96,10 @@
             ]
         },
         "submenus": [
+            {
+                "id": "franky.explorerAction",
+                "label": "Franky"
+            },
             {
                 "id": "franky.editorAction",
                 "label": "Franky"
