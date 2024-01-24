@@ -2,16 +2,18 @@ export default (name: string) => {
     const langId = 'typescript';
     // const fileheader = genFH(langId);
     return `import { useMemo } from "react";
-import { useForm } from "react-hook-form";
+import { EditIcon } from "@/components/icon";
 import { Button } from "@/components/ui/button";
 import YqgTable from "@/components/yqg-table";
 import OpPopover, { IconNode } from "@/components/yqg-table/op-popover";
-import { EditIcon } from "@/components/icon";
-import Http, { Info } from "@/http/api/http";//TODO: 改成自己的resource
+import Http, { Info } from "@/http/api/http"; //TODO: 改成自己的resource
+import { useForm } from "react-hook-form";
 
+import StatusSwitch from "@/components/yqg-table/status-switch";
 import { useSimpleTableWithQuery } from "@/components/yqg-table/useSimpleTable";
-import { useEnum, useTranslations } from "@/lib/hooks";
 import { Fields as CommonFields } from "@/constant";
+import { useEnum, useTranslations } from "@/lib/hooks";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 import YqgFormLayout from "@/components/yqg-form-layout";
 import EditModal from "./modal/edit";
@@ -65,7 +67,7 @@ export default function ${name}List() {
     const TableOptions = useMemo(
         () => ({
             colDefs: [
-                Fields.key,
+                Fields.key1,
                 {
                     ...CommonFields.status,
                     options: StatusOptions,

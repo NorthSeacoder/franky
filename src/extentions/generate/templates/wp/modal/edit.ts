@@ -27,7 +27,7 @@ function Edit${name} (props: YqgModalProps<ModalProps>) {
     const { toast } = useToast();
     
     const title = $t(pre(info.id ? "modifyYard" : "createYard"));
-    const disabled = useMemo(() => Http.id, [info]);
+    const disabled = useMemo(() => info.id, [info]);
     const editForm = useForm({
         values: info,
         resolver: yupResolver(yup.object({
@@ -46,13 +46,14 @@ function Edit${name} (props: YqgModalProps<ModalProps>) {
         editMutate.mutate(data);
     }
 
-
-    const FormOptions = useMemo(() => ({
-        layout: "vertical",
-        fieldDefs: [
-            Fields.key
-        ]
-    }), []);
+    const FormOptions = useMemo(
+        () =>
+            ({
+                layout: "vertical",
+                fieldDefs: [Fields.key1],
+            } as any),
+        [],
+    );
 
     return (
         <YqgFormModal
@@ -65,6 +66,6 @@ function Edit${name} (props: YqgModalProps<ModalProps>) {
     )
 }
 
-export default createProgramModal(EditYard);
+export default createProgramModal(Edit${name});
 `
 }

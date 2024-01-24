@@ -25,12 +25,14 @@ function View${name}(props: YqgModalProps<ModalProps>) {
     const { WarehouseOptions } = useWarehouseOptions();
 
 
-    const FormOptions = useMemo(() => ({
-        layout: "horizontal",
-        fieldDefs: [
-            Fields.key1
-        ]
-    }), [WarehouseOptions, StatusOptions]);
+    const FormOptions = useMemo(
+        () =>
+            ({
+                layout: "horizontal",
+                fieldDefs: [Fields.key1],
+            } as any),
+        [WarehouseOptions, StatusOptions],
+    );
 
     return (
         <YqgModal
@@ -45,6 +47,6 @@ function View${name}(props: YqgModalProps<ModalProps>) {
     );
 }
 
-export default createProgramModal(CompanyDetailModal)
+export default createProgramModal(View${name})
 `
 }
