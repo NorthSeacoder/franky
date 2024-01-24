@@ -872,6 +872,281 @@ export default EditModal;
 `;
 };
 
+// src/extentions/generate/templates/wp/constant/index.ts
+var constant_default = () => {
+  const langId = "typescript";
+  return `
+export const pre = (key: string) => \`Yard.info.\${key}\`;
+
+const Fields = {
+    key1: {
+        label: "key",
+        value: "value"
+    }
+}
+
+export default Fields;
+`;
+};
+
+// src/extentions/generate/templates/wp/index.ts
+var wp_default = (name) => {
+  const langId = "typescript";
+  return `import { useMemo } from "react";
+import { useForm } from "react-hook-form";
+import { Button } from "@/components/ui/button";
+import YqgTable from "@/components/yqg-table";
+import OpPopover, { IconNode } from "@/components/yqg-table/op-popover";
+import { EditIcon } from "@/components/icon";
+import Http, { Info } from "@/http/api/http";//TODO: \u6539\u6210\u81EA\u5DF1\u7684resource
+
+import { useSimpleTableWithQuery } from "@/components/yqg-table/useSimpleTable";
+import { useEnum, useTranslations } from "@/lib/hooks";
+import { Fields as CommonFields } from "@/constant";
+
+import YqgFormLayout from "@/components/yqg-form-layout";
+import EditModal from "./modal/edit";
+
+import Fields, { pre } from "./constant";
+
+function StatusComp({ record }: { record: any }) {
+    const queryClient = useQueryClient();
+    const editMutate = useMutation({
+        mutationFn: (data: Info) => Http.change(data),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ["get${name}List"] });
+        },
+    });
+    return (
+        <StatusSwitch
+            record={record}
+            mutate={editMutate.mutate}
+            key="status"
+            checkedValues={["ENABLE", "DISABLE"]}
+        />
+    );
+}
+
+export default function ${name}List() {
+    
+    const $t = useTranslations("");
+
+    const StatusOptions = useEnum({
+        key: "EnabledState",
+    });
+
+    const form: any = useForm();
+
+    const { data, pagination, onTableChange, onRefresh } = useSimpleTableWithQuery({
+        fetchApi: Http.getList,
+        queryKey: ["get${name}List"],
+    });
+
+
+    const FormOptions = useMemo(
+        () =>
+            ({
+                fieldDefs: [
+                    Fields.key1
+                ],
+            } as any),
+        [],
+    );
+
+    const TableOptions = useMemo(
+        () => ({
+            colDefs: [
+                Fields.key,
+                {
+                    ...CommonFields.status,
+                    options: StatusOptions,
+                    staticComp: StatusComp,
+                },
+                {
+                    field: "op",
+                    column: { fixed: "right" },
+                    staticComp: ({ ctx, record }: any) => (
+                        <OpPopover>
+                            <IconNode
+                                onClick={async () => {
+                                    await EditModal.open({
+                                        info: record
+                                    })
+                                    onRefresh()
+                                }}
+                                text={ctx.t(pre("modify"))}
+                                icon={<EditIcon />}
+                            />
+                        </OpPopover>   
+                    ),
+                },
+            ],
+        }),
+        [onRefresh,StatusOptions],
+    );
+
+    const extraBtn = (
+        <>
+            <Button
+                onClick={async () => {
+                    await EditModal.open({
+                        info: {}
+                    })
+                    onRefresh()
+                }}
+            >{$t("Common.create")}</Button>
+        </>
+    );
+
+    return (
+        <>
+            <YqgFormLayout
+                form={form}
+                options={FormOptions}
+                onSubmit={onRefresh}
+                onReset={onRefresh}
+                confirmLabel="Common.search"
+                extraBtn={extraBtn}
+            >
+                <YqgTable
+                    ctx={{ t: $t }}
+                    options={TableOptions as any}
+                    records={data?.body?.list || []}
+                    pagination={{
+                        ...pagination,
+                        total: data?.body?.total,
+                    }}
+                    onChange={onTableChange}
+                />
+            </YqgFormLayout>
+        </>
+    );
+}
+`;
+};
+
+// src/extentions/generate/templates/wp/modal/edit.ts
+var edit_default = (name) => {
+  const langId = "typescript";
+  return `import { useMemo } from "react";
+import { useForm } from "react-hook-form";
+import * as yup from "yup";
+
+import { YqgFormModal, createProgramModal, YqgModalProps } from "@/components/yqg-antd-modal";
+import { useTranslations  } from "@/lib/hooks";
+import { useMutation } from "@tanstack/react-query";
+import { yupResolver } from "@hookform/resolvers/yup";
+
+import useToast from "@/components/use-toast";
+import Fields, { pre } from "../constant";
+
+interface ModalProps {
+    info: any;
+}
+
+const required = true;
+
+function Edit${name} (props: YqgModalProps<ModalProps>) {
+    const { info, onDismiss, onClose } = props;
+
+    const $t = useTranslations("");
+    const $tc = useTranslations("Common");
+    const { toast } = useToast();
+    
+    const title = $t(pre(info.id ? "modifyYard" : "createYard"));
+    const disabled = useMemo(() => Http.id, [info]);
+    const editForm = useForm({
+        values: info,
+        resolver: yupResolver(yup.object({
+        })),
+    });
+
+    const editMutate = useMutation({
+        mutationFn: (data: Info) => Http[info.id ? "change" : "create"](data),
+        onSuccess: () => {
+            toast({ description: $tc("operateSuccess") });
+            onClose();
+        },
+    })
+
+    const handleConfirm = (values: any) => {
+        editMutate.mutate(data);
+    }
+
+
+    const FormOptions = useMemo(() => ({
+        layout: "vertical",
+        fieldDefs: [
+            Fields.key
+        ]
+    }), []);
+
+    return (
+        <YqgFormModal
+            title={title}
+            form={editForm}
+            options={FormOptions}
+            onCancel={onDismiss}
+            onSubmit={handleConfirm}
+        />
+    )
+}
+
+export default createProgramModal(EditYard);
+`;
+};
+
+// src/extentions/generate/templates/wp/modal/view.ts
+var view_default = (name) => {
+  const langId = "typescript";
+  return `import { useMemo } from "react";
+
+import { YqgModal, createProgramModal, YqgModalProps } from "@/components/yqg-antd-modal";
+import YqgStaicForm from "@/components/yqg-static-form";
+import { useTranslations, useEnum } from "@/lib/hooks";
+import { useWarehouseOptions } from "@/lib/hooks/index";
+
+import Fields, { pre } from "../constant";
+
+type ModalProps = {
+    info: any;
+}
+function View${name}(props: YqgModalProps<ModalProps>) {
+    const {
+        info = {},
+        onClose,
+    } = props;
+
+    const $t = useTranslations("");
+
+    const StatusOptions = useEnum({ key: "EnabledState" });
+    const { WarehouseOptions } = useWarehouseOptions();
+
+
+    const FormOptions = useMemo(() => ({
+        layout: "horizontal",
+        fieldDefs: [
+            Fields.key1
+        ]
+    }), [WarehouseOptions, StatusOptions]);
+
+    return (
+        <YqgModal
+            title={$t(pre("info"))}
+            onCancel={onClose}
+        >
+            <YqgStaicForm
+                options={FormOptions}
+                values={info}
+            />
+        </YqgModal>
+    );
+}
+
+export default createProgramModal(CompanyDetailModal)
+`;
+};
+
 // src/extentions/generate/index.ts
 var VueGeneratorStrategy = class {
   async generate(uri, componentName) {
@@ -900,6 +1175,20 @@ var ReactGeneratorStrategy = class {
   async generateModal(uri) {
     const { path } = uri;
     await writeFile(`${path}/modal/edit-modal.tsx`, modal_react_default());
+  }
+};
+var WpGeneratorStrategy = class {
+  async generate(uri, componentName) {
+    const { path } = uri;
+    const name = upperFirst(camelCase(componentName));
+    await writeFile(`${path}/index.tsx`, wp_default(name));
+    await writeFile(`${path}/constant/index.tsx`, constant_default());
+    await this.generateModal(uri, name);
+  }
+  async generateModal(uri, name) {
+    const { path } = uri;
+    await writeFile(`${path}/modal/edit.tsx`, edit_default(name));
+    await writeFile(`${path}/modal/view.tsx`, view_default(name));
   }
 };
 var generatePage = async (uri, generatorStrategy) => {
@@ -934,6 +1223,13 @@ var genReactPage = async (uri) => {
   const generatorStrategy = new ReactGeneratorStrategy();
   await generatePage(uri, generatorStrategy);
 };
+var genWpPage = async (uri) => {
+  if (!uri) {
+    return import_vscode5.window.showErrorMessage("No file path found.");
+  }
+  const generatorStrategy = new WpGeneratorStrategy();
+  await generatePage(uri, generatorStrategy);
+};
 function parseStringToObject(str) {
   const lines = str.split("\n");
   const result = {};
@@ -962,6 +1258,25 @@ var genDefs = async () => {
   let selectedText = editor.document.getText(selection);
   await import_vscode5.env.clipboard.writeText(parseStringToObject(selectedText));
   import_vscode5.window.showInformationMessage("\u5DF2\u5C06\u7ED3\u679C\u8BBE\u7F6E\u5230\u526A\u8D34\u677F");
+};
+var strTpl = (key) => `${key}: { field: "${key}", label: pre("${key}") },`;
+var genFields = async () => {
+  let editor = import_vscode5.window.activeTextEditor;
+  if (!editor) {
+    return;
+  }
+  const text = await import_vscode5.env.clipboard.readText();
+  console.log(text);
+  const obj = JSON.parse(text);
+  const result = [];
+  for (const key in obj) {
+    result.push(strTpl(key));
+  }
+  console.log(editor.document.languageId);
+  editor.edit((editBuilder) => {
+    var _a;
+    editBuilder.replace((_a = editor == null ? void 0 : editor.selection.active) != null ? _a : new import_vscode5.Position(0, 0), result.join("\n"));
+  });
 };
 
 // src/extentions/jenkins/index.ts
@@ -1001,7 +1316,9 @@ function activate({ subscriptions }) {
     import_vscode8.commands.registerCommand("franky.jenkins", jenkins_default),
     import_vscode8.commands.registerCommand("franky.generate.vue", genVuePage),
     import_vscode8.commands.registerCommand("franky.generate.react", genReactPage),
-    import_vscode8.commands.registerCommand("franky.generate.defs", genDefs)
+    import_vscode8.commands.registerCommand("franky.generate.wp", genWpPage),
+    import_vscode8.commands.registerCommand("franky.generate.defs", genDefs),
+    import_vscode8.commands.registerCommand("franky.generate.fields", genFields)
   );
   import_vscode8.workspace.onDidSaveTextDocument((file) => {
     setTimeout(() => {

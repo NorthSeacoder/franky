@@ -4,11 +4,11 @@ import { StatusBarAlignment, commands, window, workspace } from 'vscode';
 
 import { ctx } from '@common/context';
 import fileheader, { fileheaderUpdate } from '@extentions/fileheader';
-import { genReactPage, genVuePage,genDefs } from '@extentions/generate';
+import { genReactPage, genVuePage, genWpPage, genDefs, genFields } from '@extentions/generate';
 import jenkins from '@extentions/jenkins';
 import { log } from '@utils/log';
 
-export function activate({subscriptions}: ExtensionContext) {
+export function activate({ subscriptions }: ExtensionContext) {
     log.debug('"franky" is now active!');
     ctx.active = true;
     const name = execSync('git config --get user.name').toString().trim();
@@ -18,7 +18,9 @@ export function activate({subscriptions}: ExtensionContext) {
         commands.registerCommand('franky.jenkins', jenkins),
         commands.registerCommand('franky.generate.vue', genVuePage),
         commands.registerCommand('franky.generate.react', genReactPage),
-        commands.registerCommand('franky.generate.defs', genDefs)
+        commands.registerCommand('franky.generate.wp', genWpPage),
+        commands.registerCommand('franky.generate.defs', genDefs),
+        commands.registerCommand('franky.generate.fields', genFields)
     );
     // window.showInformationMessage('Hello')
 
@@ -35,4 +37,4 @@ export function activate({subscriptions}: ExtensionContext) {
     statusBar.show();
 }
 
-export function deactivate() {}
+export function deactivate() { }

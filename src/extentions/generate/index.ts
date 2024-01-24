@@ -1,4 +1,4 @@
-import { window, Uri, env } from 'vscode';
+import { window, Uri, env, Position } from 'vscode';
 import { log } from '@utils/log';
 import { camelCase, upperFirst } from '@utils/tools';
 import { writeFile } from '@utils/file';
@@ -10,7 +10,11 @@ import {
     ReactIndexTpl,
     DetailModalTpl,
     EditModalTpl,
-    ReactEditModalTpl
+    ReactEditModalTpl,
+    WpFieldTpl,
+    WpIndexTpl,
+    WpEditModalTpl,
+    WpDetailModalTpl
 } from './templates';
 
 interface GeneratorStrategy {
@@ -45,6 +49,22 @@ class ReactGeneratorStrategy implements GeneratorStrategy {
     private async generateModal(uri: Uri): Promise<void> {
         const { path } = uri;
         await writeFile(`${path}/modal/edit-modal.tsx`, ReactEditModalTpl());
+    }
+}
+
+class WpGeneratorStrategy implements GeneratorStrategy {
+    async generate(uri: Uri, componentName: string): Promise<void> {
+        const { path } = uri;
+        const name = upperFirst(camelCase(componentName));
+        await writeFile(`${path}/index.tsx`, WpIndexTpl(name));
+        await writeFile(`${path}/constant/index.tsx`, WpFieldTpl());
+        await this.generateModal(uri,name);
+    }
+
+    private async generateModal(uri: Uri,name:string): Promise<void> {
+        const { path } = uri;
+        await writeFile(`${path}/modal/edit.tsx`, WpEditModalTpl(name));
+        await writeFile(`${path}/modal/view.tsx`, WpDetailModalTpl(name));
     }
 }
 
@@ -87,6 +107,16 @@ export const genReactPage = async (uri?: Uri) => {
     const generatorStrategy = new ReactGeneratorStrategy();
     await generatePage(uri, generatorStrategy);
 };
+
+export const genWpPage = async (uri?: Uri) => {
+    if (!uri) {
+        return window.showErrorMessage('No file path found.');
+    }
+
+    const generatorStrategy = new WpGeneratorStrategy();
+    await generatePage(uri, generatorStrategy);
+};
+
 function parseStringToObject(str: string): string {
     const lines = str.split('\n');
     const result: { [key: string]: { field: string; label: string } } = {};
@@ -116,7 +146,7 @@ function pre(key: string): string {
     // 这里是你对 label 进行处理的逻辑，你可以根据需要进行修改
     return `pre('${key}')`;
 }
-//TODO: 第一步生成中文,后续添加i18n命令,替换中文改成 pre('xxx')
+//TODO: 第一步生成中文,后续添加i18n命令,替换中文改成 pre('xxx'),先隐藏,暂时跟genFields重复了
 export const genDefs = async () => {
     // 获取当前活动的文本编辑器
     let editor = window.activeTextEditor;
@@ -135,3 +165,25 @@ export const genDefs = async () => {
     // const text =  await env.clipboard.readText();
     // console.log(text);
 };
+const strTpl = (key:string)=>`${key}: { field: "${key}", label: pre("${key}") },`
+// 去 mock 复制req/res的一个基础对象,将对象内部的 key 转成key:{field:'key',label:pre('key')}的形式,直接插入光标所在位置
+export const genFields = async () => {
+    // 获取当前活动的文本编辑器
+    let editor = window.activeTextEditor;
+    if (!editor) {
+        return; // 如果没有打开的文本编辑器，则返回
+    }
+    // 获取剪贴板中内容
+    const text = await env.clipboard.readText();
+    console.log(text);
+    const obj = JSON.parse(text);
+    const result: string[] = [];
+    for (const key in obj) {
+        result.push(strTpl(key));
+    }
+    console.log(editor.document.languageId);
+    //直接插入光标所在位置
+    editor.edit((editBuilder) => {
+        editBuilder.replace(editor?.selection.active ?? new Position(0, 0), result.join('\n'));
+    })
+}

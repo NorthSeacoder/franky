@@ -52,6 +52,11 @@
                 "category": "Franky"
             },
             {
+                "command": "franky.generate.wp",
+                "title": "生成新页面(wp)",
+                "category": "Franky"
+            },
+            {
                 "command": "franky.generate.react",
                 "title": "生成新页面(react)",
                 "category": "Franky"
@@ -59,6 +64,11 @@
             {
                 "command": "franky.generate.defs",
                 "title": "根据选中内容生成 def",
+                "category": "Franky"
+            },
+            {
+                "command": "franky.generate.fields",
+                "title": "根据选中内容生成 fields",
                 "category": "Franky"
             }
         ],
@@ -77,8 +87,8 @@
             ],
             "franky.editorAction": [
                 {
-                    "command": "franky.generate.defs",
-                    "group": "1_franky@1",
+                    "command": "franky.generate.fields",
+                    "group": "1_franky@2",
                     "when": "editorLangId == typescript || editorLangId == javascript || editorLangId == typescriptreact || editorLangId == javascriptreact"
                 }
             ],
@@ -90,6 +100,11 @@
                 },
                 {
                     "command": "franky.generate.react",
+                    "group": "1_franky@2",
+                    "when": "explorerResourceIsFolder"
+                },
+                {
+                    "command": "franky.generate.wp",
                     "group": "1_franky@2",
                     "when": "explorerResourceIsFolder"
                 }
