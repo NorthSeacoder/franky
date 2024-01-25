@@ -25,6 +25,9 @@
     "activationEvents": [
         "onStartupFinished"
     ],
+    "extensionPack": [
+        "songqian.vscode-code-to-type"
+      ],
     "main": "./dist/index.js",
     "files": [
         "dist"
@@ -88,6 +91,11 @@
             "franky.editorAction": [
                 {
                     "command": "franky.generate.fields",
+                    "group": "1_franky@1",
+                    "when": "editorLangId == typescript || editorLangId == javascript || editorLangId == typescriptreact || editorLangId == javascriptreact"
+                },
+                {
+                    "command": "code-to-type.copy",
                     "group": "1_franky@2",
                     "when": "editorLangId == typescript || editorLangId == javascript || editorLangId == typescriptreact || editorLangId == javascriptreact"
                 }
