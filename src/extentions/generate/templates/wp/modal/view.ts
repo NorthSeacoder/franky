@@ -11,11 +11,11 @@ import { useWarehouseOptions } from "@/lib/hooks/index";
 import Fields, { pre } from "../constant";
 
 type ModalProps = {
-    info: any;
+    ${name}Info: any;
 }
 function View${name}(props: YqgModalProps<ModalProps>) {
     const {
-        info = {},
+        ${name}Info = {},
         onClose,
     } = props;
 
@@ -36,12 +36,12 @@ function View${name}(props: YqgModalProps<ModalProps>) {
 
     return (
         <YqgModal
-            title={$t(pre("info"))}
+            title={$t(pre("view"))}//TODO: i18n key
             onCancel={onClose}
         >
             <YqgStaicForm
                 options={FormOptions}
-                values={info}
+                values={${name}Info}
             />
         </YqgModal>
     );

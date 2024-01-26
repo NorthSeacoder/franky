@@ -1,12 +1,14 @@
+import { lowerFirst } from '@utils/tools';
+
 export default (name: string) => {
     const langId = 'typescript';
     // const fileheader = genFH(langId);
     return `import { useMemo } from "react";
-import { EditIcon } from "@/components/icon";
+import { EditIcon, SearchIcon } from "@/components/icon";
 import { Button } from "@/components/ui/button";
 import YqgTable from "@/components/yqg-table";
 import OpPopover, { IconNode } from "@/components/yqg-table/op-popover";
-import Http, { Info } from "@/http/api/http"; //TODO: 改成自己的resource
+import ${name}Http, { SearchParams } from "@/http/api/${lowerFirst(name)}";
 import { useForm } from "react-hook-form";
 
 import StatusSwitch from "@/components/yqg-table/status-switch";
@@ -17,13 +19,14 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 import YqgFormLayout from "@/components/yqg-form-layout";
 import EditModal from "./modal/edit";
+import ViewModal from "./modal/view";
 
 import Fields, { pre } from "./constant";
 
 function StatusComp({ record }: { record: any }) {
     const queryClient = useQueryClient();
     const editMutate = useMutation({
-        mutationFn: (data: Info) => Http.change(data),
+        mutationFn: (data: SearchParams) => ${name}Http.update${name}(data),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ["get${name}List"] });
         },
@@ -48,8 +51,8 @@ export default function ${name}List() {
 
     const form: any = useForm();
 
-    const { data, pagination, onTableChange, onRefresh } = useSimpleTableWithQuery({
-        fetchApi: Http.getList,
+    const { data, pagination, onTableChange, onRefresh, refetch } = useSimpleTableWithQuery({
+        fetchApi: ${name}Http.list,
         queryKey: ["get${name}List"],
     });
 
@@ -81,19 +84,28 @@ export default function ${name}List() {
                             <IconNode
                                 onClick={async () => {
                                     await EditModal.open({
-                                        info: record
+                                        ${name}Info: record
                                     })
-                                    onRefresh()
+                                    refetch()
                                 }}
                                 text={ctx.t(pre("modify"))}
                                 icon={<EditIcon />}
+                            />
+                            <IconNode
+                                onClick={() =>
+                                    ViewModal.open({
+                                        ${name}Info: record,
+                                    })
+                                }
+                                text={ctx.t("view")}
+                                icon={<SearchIcon />}
                             />
                         </OpPopover>   
                     ),
                 },
             ],
         }),
-        [onRefresh,StatusOptions],
+        [refetch,StatusOptions],
     );
 
     const extraBtn = (
@@ -101,9 +113,9 @@ export default function ${name}List() {
             <Button
                 onClick={async () => {
                     await EditModal.open({
-                        info: {}
+                        ${name}Info: {}
                     })
-                    onRefresh()
+                    refetch()
                 }}
             >{$t("Common.create")}</Button>
         </>

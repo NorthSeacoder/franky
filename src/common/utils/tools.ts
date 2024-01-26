@@ -33,6 +33,11 @@ export function kebabCase(input: string): string {
 export function camelCase(input: string): string {
     return input.replace(/-([a-z])/g, (_, match) => match.toUpperCase());
 }
+
 export function upperFirst(input: string): string {
     return input.charAt(0).toUpperCase() + input.slice(1);
+}
+
+export function lowerFirst(input: string): string {
+    return input.charAt(0).toLowerCase() + input.slice(1);
 }
