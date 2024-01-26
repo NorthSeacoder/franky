@@ -7,7 +7,7 @@ export const pre = (key: string) => \`Yard.info.\${key}\`;//TODO: i18n key,ä¸”æ›
 const Fields = {
     key1: {
         label: "key",
-        value: "field"
+        field: "key"
     }
 }
 
