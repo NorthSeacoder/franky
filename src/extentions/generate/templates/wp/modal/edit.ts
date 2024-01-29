@@ -17,29 +17,29 @@ import useToast from "@/components/use-toast";
 import Fields, { pre } from "../constant";
 
 interface ModalProps {
-    ${name}Info: any;
+    ${lowerFirst(name)}Info: any;
 }
 
 const required = true;
 
 function Edit${name} (props: YqgModalProps<ModalProps>) {
-    const { ${name}Info, onDismiss, onClose } = props;
+    const { ${lowerFirst(name)}Info, onDismiss, onClose } = props;
 
     const $t = useTranslations("");
     const $tc = useTranslations("Common");
     const { toast } = useToast();
     
-    const title = $t(pre(${name}Info.id ? "modify" : "create"));//TODO: i18n key
-    const disabled = useMemo(() => ${name}Info.id, [${name}Info]);
+    const title = $t(pre(${lowerFirst(name)}Info.id ? "modify" : "create"));//TODO: i18n key
+    const disabled = useMemo(() => ${lowerFirst(name)}Info.id, [${lowerFirst(name)}Info]);
     const editForm = useForm({
-        values: ${name}Info,
+        values: ${lowerFirst(name)}Info,
         resolver: yupResolver(yup.object({
         })),
     });
 
     const editMutate = useMutation({
         mutationFn: (data: SearchParams) => 
-            ${name}Http[${name}Info.id ? "update${name}" : "create${name}"](data),
+            ${name}Http[${lowerFirst(name)}Info.id ? "update${name}" : "create${name}"](data),
         onSuccess: () => {
             toast({ description: $tc("operateSuccess") });
             onClose();

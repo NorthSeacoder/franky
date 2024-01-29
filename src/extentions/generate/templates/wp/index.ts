@@ -84,7 +84,7 @@ export default function ${name}List() {
                             <IconNode
                                 onClick={async () => {
                                     await EditModal.open({
-                                        ${name}Info: record
+                                        ${lowerFirst(name)}Info: record
                                     })
                                     refetch()
                                 }}
@@ -94,7 +94,7 @@ export default function ${name}List() {
                             <IconNode
                                 onClick={() =>
                                     ViewModal.open({
-                                        ${name}Info: record,
+                                        ${lowerFirst(name)}Info: record,
                                     })
                                 }
                                 text={ctx.t("view")}
@@ -113,7 +113,7 @@ export default function ${name}List() {
             <Button
                 onClick={async () => {
                     await EditModal.open({
-                        ${name}Info: {}
+                        ${lowerFirst(name)}Info: {}
                     })
                     refetch()
                 }}

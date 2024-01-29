@@ -1,3 +1,5 @@
+import { lowerFirst } from '@utils/tools';
+
 export default (name: string) => {
     const langId = 'typescript';
     // const fileheader = genFH(langId);
@@ -11,11 +13,11 @@ import { useWarehouseOptions } from "@/lib/hooks/index";
 import Fields, { pre } from "../constant";
 
 type ModalProps = {
-    ${name}Info: any;
+    ${lowerFirst(name)}Info: any;
 }
 function View${name}(props: YqgModalProps<ModalProps>) {
     const {
-        ${name}Info = {},
+        ${lowerFirst(name)}Info = {},
         onClose,
     } = props;
 
@@ -41,7 +43,7 @@ function View${name}(props: YqgModalProps<ModalProps>) {
         >
             <YqgStaicForm
                 options={FormOptions}
-                values={${name}Info}
+                values={${lowerFirst(name)}Info}
             />
         </YqgModal>
     );
