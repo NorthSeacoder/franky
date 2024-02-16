@@ -71,7 +71,12 @@
             },
             {
                 "command": "franky.generate.fields",
-                "title": "根据选中内容生成 fields",
+                "title": "根据复制内容生成 fields",
+                "category": "Franky"
+            },
+            {
+                "command": "franky.generate.css2tailwind",
+                "title": "根据复制的CSS生成TailwindCSS 类名",
                 "category": "Franky"
             }
         ],
@@ -97,6 +102,11 @@
                 {
                     "command": "code-to-type.copy",
                     "group": "1_franky@2",
+                    "when": "editorLangId == typescript || editorLangId == javascript || editorLangId == typescriptreact || editorLangId == javascriptreact"
+                },
+                {
+                    "command": "franky.generate.css2tailwind",
+                    "group": "1_franky@3",
                     "when": "editorLangId == typescript || editorLangId == javascript || editorLangId == typescriptreact || editorLangId == javascriptreact"
                 }
             ],
@@ -188,26 +198,29 @@
         "release": "bumpp && nr publish"
     },
     "devDependencies": {
-        "@nsea/cz": "0.0.2",
-        "commitizen": "^4.1.5",
-        "conventional-changelog": "^4.0.0",
-        "conventional-changelog-cli": "^3.0.0",
         "@antfu/ni": "^0.21.9",
+        "@nsea/cz": "0.0.2",
         "@types/node": "^20.9.0",
         "@types/vscode": "^1.83.0",
         "@vscode/vsce": "^2.22.0",
         "bumpp": "^9.2.0",
+        "commitizen": "^4.1.5",
+        "conventional-changelog": "^4.0.0",
+        "conventional-changelog-cli": "^3.0.0",
+        "dayjs": "^1.10.7",
         "eslint": "^8.53.0",
+        "simple-git": "^2.47.0",
         "tsup": "^7.2.0",
         "typescript": "^5.2.2",
-        "vitest": "^0.34.6",
-        "dayjs": "^1.10.7",
-        "simple-git": "^2.47.0"
+        "vitest": "^0.34.6"
     },
     "config": {
         "commitizen": {
             "path": "cz-conventional-changelog"
         }
     },
-    "dependencies": {}
+    "dependencies": {
+        "css-to-tailwindcss": "^1.0.5",
+        "tailwindcss": "^3.4.1"
+    }
 }

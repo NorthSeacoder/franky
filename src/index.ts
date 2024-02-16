@@ -4,7 +4,7 @@ import { StatusBarAlignment, commands, window, workspace } from 'vscode';
 
 import { ctx } from '@common/context';
 import fileheader, { fileheaderUpdate } from '@extentions/fileheader';
-import { genReactPage, genVuePage, genWpPage, genDefs, genFields } from '@extentions/generate';
+import { genReactPage, genVuePage, genWpPage, genDefs, genFields,genTailwindCSS } from '@extentions/generate';
 import jenkins from '@extentions/jenkins';
 import { log } from '@utils/log';
 
@@ -20,7 +20,8 @@ export function activate({ subscriptions }: ExtensionContext) {
         commands.registerCommand('franky.generate.react', genReactPage),
         commands.registerCommand('franky.generate.wp', genWpPage),
         commands.registerCommand('franky.generate.defs', genDefs),
-        commands.registerCommand('franky.generate.fields', genFields)
+        commands.registerCommand('franky.generate.fields', genFields),
+        commands.registerCommand('franky.generate.css2tailwind', genTailwindCSS)
     );
     // window.showInformationMessage('Hello')
 
