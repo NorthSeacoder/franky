@@ -194,43 +194,51 @@ import { TailwindConverter } from "css-to-tailwindcss";
 
 import loadConfig from 'tailwindcss/loadConfig';
 export const genTailwindCSS = async (uri: Uri) => {
-    // 获取当前活动的文本编辑器
-    let editor = window.activeTextEditor;
-    if (!editor) {
-        window.showInformationMessage('No active editor.');
-        return; // 如果没有打开的文本编辑器，则返回
+    try {
+        // 获取当前活动的文本编辑器
+        let editor = window.activeTextEditor;
+        if (!editor) {
+            log.debug('No active editor.');
+            return; // 如果没有打开的文本编辑器，则返回
+        }
+
+        const workspaceFolder = workspace.getWorkspaceFolder(uri);
+        if (!workspaceFolder) {
+            log.debug('The file is not in a workspace folder.');
+            return;
+        }
+        const tailwindConfigFilePattern = new RelativePattern(workspaceFolder.uri.fsPath, DEFAULT_TAILWIND_CONFIG_FILE_PATTERN)
+        const [foundFile] = await workspace.findFiles(tailwindConfigFilePattern);
+        if (!foundFile) {
+            log.debug('No tailwind config file found.');
+            return;
+        }
+
+        const config = loadConfig(foundFile.fsPath);
+        const converter = new TailwindConverter({
+            remInPx: 16,
+            postCSSPlugins: [require("postcss-nested")],
+            tailwindConfig: config
+        });
+
+        // 获取剪贴板中内容
+        const text = await env.clipboard.readText();
+        const inputCSS = `
+            .container {
+                ${text}
+            }
+        `
+        log.debug(inputCSS)
+        converter.convertCSS(inputCSS).then(({ nodes }) => {
+            log.debug(nodes);
+            const [{ tailwindClasses }] = nodes
+            //直接插入光标所在位置
+            editor?.edit((editBuilder) => {
+                editBuilder.replace(editor?.selection.active ?? new Position(0, 0), tailwindClasses.join(' '));
+            })
+        });
+    } catch (error) {
+        log.debug(error);
     }
 
-    const workspaceFolder = workspace.getWorkspaceFolder(uri);
-    if (!workspaceFolder) {
-        window.showInformationMessage('The file is not in a workspace folder.');
-        return;
-    }
-    const tailwindConfigFilePattern = new RelativePattern(workspaceFolder.uri.fsPath, DEFAULT_TAILWIND_CONFIG_FILE_PATTERN)
-    const [foundFile] = await workspace.findFiles(tailwindConfigFilePattern);
-    if (!foundFile) return;
-
-    const config = loadConfig(foundFile.fsPath);
-    const converter = new TailwindConverter({
-        remInPx: 16,
-        postCSSPlugins: [require("postcss-nested")],
-        tailwindConfig: config
-    });
-
-    // 获取剪贴板中内容
-    const text = await env.clipboard.readText();
-    const inputCSS = `
-    .container {
-        ${text}
-    }
-    `
-    log.debug(inputCSS)
-    converter.convertCSS(inputCSS).then(({ nodes }) => {
-        log.debug(nodes);
-        const [{tailwindClasses}] = nodes
-        //直接插入光标所在位置
-        editor?.edit((editBuilder) => {
-            editBuilder.replace(editor?.selection.active ?? new Position(0, 0), tailwindClasses.join(' '));
-        })
-    });
 }
