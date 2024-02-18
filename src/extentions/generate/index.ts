@@ -194,6 +194,7 @@ import { TailwindConverter } from "css-to-tailwindcss";
 
 import loadConfig from 'tailwindcss/loadConfig';
 export const genTailwindCSS = async (uri: Uri) => {
+    log.info("start genTailwindCSS")
     try {
         // 获取当前活动的文本编辑器
         let editor = window.activeTextEditor;
@@ -215,6 +216,8 @@ export const genTailwindCSS = async (uri: Uri) => {
         }
 
         const config = loadConfig(foundFile.fsPath);
+        log.info(foundFile.fsPath)
+
         const converter = new TailwindConverter({
             remInPx: 16,
             postCSSPlugins: [require("postcss-nested")],
@@ -228,14 +231,16 @@ export const genTailwindCSS = async (uri: Uri) => {
                 ${text}
             }
         `
-        log.debug(inputCSS)
+        log.info(inputCSS)
         converter.convertCSS(inputCSS).then(({ nodes }) => {
-            log.debug(nodes);
             const [{ tailwindClasses }] = nodes
+            log.info(tailwindClasses);
             //直接插入光标所在位置
             editor?.edit((editBuilder) => {
                 editBuilder.replace(editor?.selection.active ?? new Position(0, 0), tailwindClasses.join(' '));
             })
+        }).catch((err)=>{
+            log.debug(err)
         });
     } catch (error) {
         log.debug(error);
