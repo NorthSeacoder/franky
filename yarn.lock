@@ -524,15 +524,16 @@
     loupe "^2.3.6"
     pretty-format "^29.5.0"
 
-"@vscode/vsce@^2.22.0":
-  version "2.22.0"
-  resolved "https://registry.npmjs.org/@vscode/vsce/-/vsce-2.22.0.tgz#1eb3ebc6b89581a150bb44dd7d731a064019b617"
-  integrity sha512-8df4uJiM3C6GZ2Sx/KilSKVxsetrTBBIUb3c0W4B1EWHcddioVs5mkyDKtMNP0khP/xBILVSzlXxhV+nm2rC9A==
+"@vscode/vsce@^2.23.0":
+  version "2.23.0"
+  resolved "https://registry.npmmirror.com/@vscode/vsce/-/vsce-2.23.0.tgz#280ce82356c59efda97d3ba14bcdd9e3e22ddb7f"
+  integrity sha512-Wf9yN8feZf4XmUW/erXyKQvCL577u72AQv4AI4Cwt5o5NyE49C5mpfw3pN78BJYYG3qnSIxwRo7JPvEurkQuNA==
   dependencies:
     azure-devops-node-api "^11.0.1"
     chalk "^2.4.2"
     cheerio "^1.0.0-rc.9"
     commander "^6.2.1"
+    find-yarn-workspace-root "^2.0.0"
     glob "^7.0.6"
     hosted-git-info "^4.0.2"
     jsonc-parser "^3.2.0"
@@ -1246,13 +1247,6 @@ css-what@^6.1.0:
   resolved "https://registry.npmjs.org/css-what/-/css-what-6.1.0.tgz#fb5effcf76f1ddea2c81bdfaa4de44e79bac70f4"
   integrity sha512-HTUrgRJ7r4dsZKU6GjmpfRK1O76h97Z8MfS1G0FozR+oF2kG6Vfe8JE6zwrkbxigziPHinCJ+gCPjA9EaBDtRw==
 
-css2tailwind@^1.0.0, css2tailwind@^1.0.10:
-  version "1.0.10"
-  resolved "https://registry.npmmirror.com/css2tailwind/-/css2tailwind-1.0.10.tgz#ab6250a09a7f236ba68c01f603c403e6d46e78cd"
-  integrity sha512-Hs+t2CnYW5Jz53quCO6cn8osQElyJMAkWqPhP4cGzoqLFLXUQpZ96U7Y4RXMjtvqCn3cqovIkuJ/D2Cor6Z2Hw==
-  dependencies:
-    css2tailwind "^1.0.0"
-
 cssesc@^3.0.0:
   version "3.0.0"
   resolved "https://registry.npmmirror.com/cssesc/-/cssesc-3.0.0.tgz#37741919903b868565e1c09ea747445cd18983ee"
@@ -1753,6 +1747,13 @@ find-up@^5.0.0:
     locate-path "^6.0.0"
     path-exists "^4.0.0"
 
+find-yarn-workspace-root@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.npmmirror.com/find-yarn-workspace-root/-/find-yarn-workspace-root-2.0.0.tgz#f47fb8d239c900eb78179aa81b66673eac88f7bd"
+  integrity sha512-1IMnbjt4KzsQfnhnzNd8wUEgXZ44IzZaZmnLYx7D5FZlaHt2gW20Cri8Q+E/t5tIj4+epTBub+2Zxu/vNILzqQ==
+  dependencies:
+    micromatch "^4.0.2"
+
 findup-sync@^4.0.0:
   version "4.0.0"
   resolved "https://registry.npmjs.org/findup-sync/-/findup-sync-4.0.0.tgz#956c9cdde804052b881b428512905c4a5f2cdef0"
@@ -1950,7 +1951,7 @@ glob@7.2.3, glob@^7.0.6, glob@^7.1.3:
     once "^1.3.0"
     path-is-absolute "^1.0.0"
 
-glob@^10.3.10:
+glob@^10.3.10, glob@^10.3.7:
   version "10.3.10"
   resolved "https://registry.npmmirror.com/glob/-/glob-10.3.10.tgz#0351ebb809fd187fe421ab96af83d3a70715df4b"
   integrity sha512-fa46+tv1Ak0UPK1TOy/pZrIybNNt4HCv7SDzwyfiOZkvZLEbjsZkJBPtDHVshZjbecAoAGSC20MjLDG/qr679g==
@@ -2169,11 +2170,6 @@ ini@^1.3.2, ini@^1.3.4, ini@~1.3.0:
   version "1.3.8"
   resolved "https://registry.npmjs.org/ini/-/ini-1.3.8.tgz#a29da425b48806f34767a4efce397269af28432c"
   integrity sha512-JV/yugV2uzW5iMRSiZAyDtQd+nxtUnjeLt0acNdw98kKLrvuRVyB80tsREOE7yvGVgalhZ6RNXCmEHkUKBKxew==
-
-inline-style-parser@0.2.2:
-  version "0.2.2"
-  resolved "https://registry.npmmirror.com/inline-style-parser/-/inline-style-parser-0.2.2.tgz#d498b4e6de0373458fc610ff793f6b14ebf45633"
-  integrity sha512-EcKzdTHVe8wFVOGEYXiW9WmJXPjqi1T+234YpJr98RiFYKHV3cdy1+3mkTE+KHTHxFFLH51SfaGOoUdW+v7ViQ==
 
 inquirer@8.2.5:
   version "8.2.5"
@@ -3417,6 +3413,13 @@ rimraf@^3.0.0, rimraf@^3.0.2:
   dependencies:
     glob "^7.1.3"
 
+rimraf@^5.0.5:
+  version "5.0.5"
+  resolved "https://registry.npmmirror.com/rimraf/-/rimraf-5.0.5.tgz#9be65d2d6e683447d2e9013da2bf451139a61ccf"
+  integrity sha512-CqDakW+hMe/Bz202FPEymy68P+G50RfMQK+Qo5YUqc9SPipvbGjCGKd0RSKEelbsfQuw3g5NZDSrlZZAJurH1A==
+  dependencies:
+    glob "^10.3.7"
+
 rollup@^4.0.2, rollup@^4.2.0:
   version "4.4.1"
   resolved "https://registry.npmjs.org/rollup/-/rollup-4.4.1.tgz#2f85169f23d13dabb3d9b846d753965757353820"
@@ -3738,20 +3741,6 @@ strip-literal@^1.0.1:
   integrity sha512-PugKzOsyXpArk0yWmUwqOZecSO0GH0bPoctLcqNDH9J04pVW3lflYE0ujElBGTloevcxF5MofAOZ7C5l2b+wLg==
   dependencies:
     acorn "^8.10.0"
-
-style-to-js@^1.1.10:
-  version "1.1.10"
-  resolved "https://registry.npmmirror.com/style-to-js/-/style-to-js-1.1.10.tgz#ec20e1264ba11dc7f71b94b3a3a05566ed856e54"
-  integrity sha512-VC7MBJa+y0RZhpnLKDPmVRLRswsASLmixkiZ5R8xZpNT9VyjeRzwnXd2pBzAWdgSGv/pCNNH01gPCCUsB9exYg==
-  dependencies:
-    style-to-object "1.0.5"
-
-style-to-object@1.0.5:
-  version "1.0.5"
-  resolved "https://registry.npmmirror.com/style-to-object/-/style-to-object-1.0.5.tgz#5e918349bc3a39eee3a804497d97fcbbf2f0d7c0"
-  integrity sha512-rDRwHtoDD3UMMrmZ6BzOW0naTjMsVZLIjsGleSKS/0Oz+cgCfAPRspaqJuE8rDzpKha/nEvnM0IF4seEAZUTKQ==
-  dependencies:
-    inline-style-parser "0.2.2"
 
 sucrase@^3.20.3:
   version "3.34.0"

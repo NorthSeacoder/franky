@@ -193,6 +193,8 @@ const DEFAULT_TAILWIND_CONFIG_FILE_PATTERN = `**/${CONFIG_FILE_GLOB}`;
 import { TailwindConverter } from "css-to-tailwindcss";
 
 import loadConfig from 'tailwindcss/loadConfig';
+
+// const esm = require('esm')(module /*, options*/);
 export const genTailwindCSS = async (uri: Uri) => {
     log.info("start genTailwindCSS")
     try {
@@ -215,9 +217,10 @@ export const genTailwindCSS = async (uri: Uri) => {
             return;
         }
 
-        const config = loadConfig(foundFile.fsPath);
         log.info(foundFile.fsPath)
-
+        const config = loadConfig(foundFile.fsPath);
+        // const config = esm(foundFile.fsPath);
+        console.log(config);
         const converter = new TailwindConverter({
             remInPx: 16,
             postCSSPlugins: [require("postcss-nested")],

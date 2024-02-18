@@ -1,4 +1,4 @@
-import { window } from 'vscode'
+import { Color, window } from 'vscode'
 
 export const channel = window.createOutputChannel('Franky')
 
@@ -10,7 +10,8 @@ export const log = {
   },
 
   log(...args: any[]) {
-    channel.appendLine(args.map(i => String(i)).join(' '))
+    const msg = args.map(i => String(i)).join(' ');
+    channel.appendLine(msg)
   },
 
   info(...args: any[]){
