@@ -33,12 +33,12 @@
         "dist"
     ],
     "contributes": {
-        "views":{
+        "views": {
             "explorer": [
                 {
-					"id": "fileExplorer",
-					"name": "当前模板"
-				}
+                    "id": "fileExplorer",
+                    "name": "当前模板"
+                }
             ]
         },
         "commands": [
@@ -70,6 +70,11 @@
             {
                 "command": "franky.generate.react",
                 "title": "生成新页面(react)",
+                "category": "Franky"
+            },
+            {
+                "command": "franky.template",
+                "title": "动态模板",
                 "category": "Franky"
             },
             {
@@ -131,7 +136,12 @@
                 },
                 {
                     "command": "franky.generate.wp",
-                    "group": "1_franky@2",
+                    "group": "1_franky@3",
+                    "when": "explorerResourceIsFolder"
+                },
+                {
+                    "command": "franky.template",
+                    "group": "1_franky@4",
                     "when": "explorerResourceIsFolder"
                 }
             ]
@@ -239,6 +249,7 @@
     },
     "dependencies": {
         "css-to-tailwindcss": "^1.0.5",
+        "handlebars": "^4.7.8",
         "mkdirp": "^3.0.1",
         "rimraf": "^5.0.7",
         "tailwindcss": "^3.4.1"
