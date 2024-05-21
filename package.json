@@ -33,6 +33,14 @@
         "dist"
     ],
     "contributes": {
+        "views":{
+            "explorer": [
+                {
+					"id": "fileExplorer",
+					"name": "当前模板"
+				}
+            ]
+        },
         "commands": [
             {
                 "command": "franky.fileheader",
@@ -158,6 +166,16 @@
                     "type": "string",
                     "default": "https://www.jenkins.io/",
                     "description": "your jenkins url,default value is jenkins's homepage"
+                },
+                "franky.templates.repository": {
+                    "type": "string",
+                    "default": "https://github.com/NorthSeacoder/templates.git",
+                    "description": "模板仓库路径"
+                },
+                "franky.templates.local": {
+                    "type": "string",
+                    "default": "/tmp/franky",
+                    "description": "模板本地路径"
                 }
             }
         },
@@ -209,7 +227,6 @@
         "conventional-changelog-cli": "^3.0.0",
         "dayjs": "^1.10.7",
         "eslint": "^8.53.0",
-        "rimraf": "^5.0.5",
         "simple-git": "^2.47.0",
         "tsup": "^7.2.0",
         "typescript": "^5.2.2",
@@ -222,6 +239,8 @@
     },
     "dependencies": {
         "css-to-tailwindcss": "^1.0.5",
+        "mkdirp": "^3.0.1",
+        "rimraf": "^5.0.7",
         "tailwindcss": "^3.4.1"
     }
 }

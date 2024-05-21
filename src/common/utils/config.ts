@@ -11,5 +11,14 @@ export default {
 
     get jenkinsUrl(): string {
         return getConfig('jenkins.url') ?? '';
-    }
+    },
+
+    get templateRepository(): string {
+        return getConfig('templates.repository') ?? '';
+    },
+
+    get templateLocal(): string {
+        return getConfig('templates.local') ?? '';
+    },
+
 };
