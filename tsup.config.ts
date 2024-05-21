@@ -14,5 +14,5 @@ export default defineConfig({
   external: [
     'vscode',
   ],
-  noExternal:["tailwindcss","css-to-tailwindcss"]
+  noExternal:["tailwindcss","css-to-tailwindcss","handlebars","mkdirp","rimraf"]
 })
