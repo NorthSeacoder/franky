@@ -1,257 +1,33 @@
 {
     "name": "franky",
-    "displayName": "Franky",
     "description": "tools in work",
     "version": "1.4.1",
-    "engines": {
-        "vscode": "^1.83.0",
-        "node": ">=18"
-    },
-    "publisher": "NorthSeacoder",
     "license": "MIT",
     "repository": {
         "type": "git",
         "url": "https://github.com/NorthSeacoder/franky.git"
     },
-    "icon": "images/tools.png",
-    "categories": [
-        "Other"
-    ],
-    "keywords": [
-        "fileheader",
-        "git log",
-        "multi-root ready"
-    ],
-    "activationEvents": [
-        "onStartupFinished"
-    ],
-    "extensionPack": [
-        "songqian.vscode-code-to-type"
-    ],
-    "main": "./dist/index.js",
-    "files": [
-        "dist"
-    ],
-    "contributes": {
-        "views": {
-            "explorer": [
-                {
-                    "id": "fileExplorer",
-                    "name": "当前模板"
-                }
-            ]
-        },
-        "commands": [
-            {
-                "command": "franky.fileheader",
-                "title": "fileheader",
-                "category": "Franky"
-            },
-            {
-                "command": "franky.diffLog",
-                "title": "diffLog",
-                "category": "Franky"
-            },
-            {
-                "command": "franky.jenkins",
-                "title": "跳转jenkins",
-                "category": "Franky"
-            },
-            {
-                "command": "franky.generate.vue",
-                "title": "生成新页面(vue)",
-                "category": "Franky"
-            },
-            {
-                "command": "franky.generate.wp",
-                "title": "生成新页面(wp)",
-                "category": "Franky"
-            },
-            {
-                "command": "franky.generate.react",
-                "title": "生成新页面(react)",
-                "category": "Franky"
-            },
-            {
-                "command": "franky.template",
-                "title": "动态模板",
-                "category": "Franky"
-            },
-            {
-                "command": "franky.generate.defs",
-                "title": "根据选中内容生成 def",
-                "category": "Franky"
-            },
-            {
-                "command": "franky.generate.fields",
-                "title": "根据复制内容生成 fields",
-                "category": "Franky"
-            },
-            {
-                "command": "franky.generate.css2tailwind",
-                "title": "根据复制的CSS生成TailwindCSS 类名",
-                "category": "Franky"
-            }
-        ],
-        "menus": {
-            "explorer/context": [
-                {
-                    "submenu": "franky.explorerAction",
-                    "group": "navigation@1"
-                }
-            ],
-            "editor/context": [
-                {
-                    "submenu": "franky.editorAction",
-                    "group": "navigation@1"
-                }
-            ],
-            "franky.editorAction": [
-                {
-                    "command": "franky.generate.fields",
-                    "group": "1_franky@1",
-                    "when": "editorLangId == typescript || editorLangId == javascript || editorLangId == typescriptreact || editorLangId == javascriptreact"
-                },
-                {
-                    "command": "code-to-type.copy",
-                    "group": "1_franky@2",
-                    "when": "editorLangId == typescript || editorLangId == javascript || editorLangId == typescriptreact || editorLangId == javascriptreact"
-                },
-                {
-                    "command": "franky.generate.css2tailwind",
-                    "group": "1_franky@3",
-                    "when": "editorLangId == typescript || editorLangId == javascript || editorLangId == typescriptreact || editorLangId == javascriptreact"
-                }
-            ],
-            "franky.explorerAction": [
-                {
-                    "command": "franky.generate.vue",
-                    "group": "1_franky@1",
-                    "when": "explorerResourceIsFolder"
-                },
-                {
-                    "command": "franky.generate.react",
-                    "group": "1_franky@2",
-                    "when": "explorerResourceIsFolder"
-                },
-                {
-                    "command": "franky.generate.wp",
-                    "group": "1_franky@3",
-                    "when": "explorerResourceIsFolder"
-                },
-                {
-                    "command": "franky.template",
-                    "group": "1_franky@4",
-                    "when": "explorerResourceIsFolder"
-                }
-            ]
-        },
-        "submenus": [
-            {
-                "id": "franky.explorerAction",
-                "label": "Franky"
-            },
-            {
-                "id": "franky.editorAction",
-                "label": "Franky"
-            }
-        ],
-        "keybindings": [
-            {
-                "command": "franky.fileheader",
-                "key": "ctrl+alt+i",
-                "when": "editorTextFocus"
-            },
-            {
-                "command": "franky.diffLog",
-                "key": "ctrl+alt+d",
-                "when": "editorTextFocus"
-            }
-        ],
-        "configuration": {
-            "type": "object",
-            "title": "franky Configuration",
-            "properties": {
-                "franky.jenkins.url": {
-                    "type": "string",
-                    "default": "https://www.jenkins.io/",
-                    "description": "your jenkins url,default value is jenkins's homepage"
-                },
-                "franky.templates.repository": {
-                    "type": "string",
-                    "default": "https://github.com/NorthSeacoder/templates.git",
-                    "description": "模板仓库路径"
-                },
-                "franky.templates.local": {
-                    "type": "string",
-                    "default": "/tmp/franky",
-                    "description": "模板本地路径"
-                }
-            }
-        },
-        "snippets": [
-            {
-                "language": "typescript",
-                "path": "./snippets/common.json"
-            },
-            {
-                "language": "vue",
-                "path": "./snippets/common.json"
-            },
-            {
-                "language": "javascript",
-                "path": "./snippets/common.json"
-            },
-            {
-                "language": "typescriptreact",
-                "path": "./snippets/common.json"
-            },
-            {
-                "language": "javascriptreact",
-                "path": "./snippets/common.json"
-            }
-        ]
-    },
+    "main": "index.js",
     "scripts": {
         "cz": "git add . && git-cz",
         "cl": "conventional-changelog -p angular -i CHANGELOG.md -s -r 0",
-        "build": "rimraf dist && env NODE_ENV=production tsup",
-        "dev": "env NODE_ENV=development tsup",
+        "dev:extension": "pnpm run -F extension dev",
+        "build": "run-s build:*",
+        "build:extension": "pnpm run -F extension build",
         "lint": "eslint .",
-        "vscode:prepublish": "nr build",
-        "publish": "vsce publish",
-        "pack": "vsce package",
-        "test": "vitest",
-        "typecheck": "tsc --noEmit",
-        "release": "bumpp && nr publish"
+        "publish": "pnpm run -F extension  publish",
+        "pack": "pnpm run -F extension package",
+        "release": "pnpm run -F extension release"
     },
     "devDependencies": {
         "@antfu/ni": "^0.21.9",
-        "@nsea/cz": "0.0.2",
-        "@types/node": "^20.9.0",
-        "@types/vscode": "^1.83.0",
-        "@vscode/vsce": "^2.23.0",
-        "bumpp": "^9.2.0",
         "commitizen": "^4.1.5",
         "conventional-changelog": "^4.0.0",
         "conventional-changelog-cli": "^3.0.0",
-        "dayjs": "^1.10.7",
-        "eslint": "^8.53.0",
-        "simple-git": "^2.47.0",
-        "tsup": "^7.2.0",
-        "typescript": "^5.2.2",
-        "vitest": "^0.34.6"
-    },
-    "config": {
-        "commitizen": {
-            "path": "cz-conventional-changelog"
-        }
+        "npm-run-all": "^4.1.5",
+        "rimraf": "^5.0.7"
     },
     "dependencies": {
-        "css-to-tailwindcss": "^1.0.5",
-        "handlebars": "^4.7.8",
-        "mkdirp": "^3.0.1",
-        "rimraf": "^5.0.7",
-        "tailwindcss": "^3.4.1"
+        "cec-client-server": "^1.3.2"
     }
 }

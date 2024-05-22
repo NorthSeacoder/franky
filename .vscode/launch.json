@@ -9,15 +9,15 @@
 			"name": "Run Franky",
 			"type": "extensionHost",
 			"request": "launch",
-			"runtimeExecutable": "${execPath}",
+			// "runtimeExecutable": "${execPath}",
 			"args": [
-				// "--disable-extensions",
-				"--extensionDevelopmentPath=${workspaceFolder}"
+				"--disable-extensions",
+				"--extensionDevelopmentPath=${workspaceFolder}/packages/extension"
 			],
 			"outFiles": [
-				"${workspaceFolder}/dist/**/*.js"
+				"${workspaceFolder}/packages/extension/dist/extension/**/*.js"
 			  ],
-			"preLaunchTask": "npm: dev",
+			"preLaunchTask": "${defaultBuildTask}",
 		},
 		{
 			"name": "Extension Tests",

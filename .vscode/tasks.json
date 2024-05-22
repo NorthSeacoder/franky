@@ -5,11 +5,12 @@
   "tasks": [
     {
       "type": "npm",
-      "script": "dev",
+      "script": "dev:extension",
       "isBackground": true,
       "presentation": {
         "reveal": "never"
       },
+      // "problemMatcher": "$tsc-watch",
       "problemMatcher": [
         {
           // "base": "$ts-webpack-watch",
@@ -21,7 +22,10 @@
           }
         }
       ],
-      "group": "build"
+      "group": {
+				"kind": "build",
+				"isDefault": true
+			}
     }
   ]
 }
