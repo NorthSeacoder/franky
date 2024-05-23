@@ -91,6 +91,11 @@
                 "command": "franky.generate.css2tailwind",
                 "title": "根据复制的CSS生成TailwindCSS 类名",
                 "category": "Franky"
+            },
+            {
+                "command": "franky.view.show",
+                "title": "Panel View",
+                "category": "Franky"
             }
         ],
         "menus": {
@@ -141,6 +146,11 @@
                 },
                 {
                     "command": "franky.template",
+                    "group": "1_franky@4",
+                    "when": "explorerResourceIsFolder"
+                },
+                {
+                    "command": "franky.view.show",
                     "group": "1_franky@4",
                     "when": "explorerResourceIsFolder"
                 }
@@ -213,7 +223,8 @@
         ]
     },
     "scripts": {
-        "build": "rimraf dist && env NODE_ENV=production tsup",
+        "clear": "rimraf dist/extension",
+        "build": "rimraf dist/extension && env NODE_ENV=production tsup",
         "dev": "env NODE_ENV=development tsup",
         "lint": "eslint .",
         "vscode:prepublish": "nr build",
@@ -238,7 +249,9 @@
     "dependencies": {
         "css-to-tailwindcss": "^1.0.5",
         "handlebars": "^4.7.8",
+        "html-modifier": "^1.2.0",
         "mkdirp": "^3.0.1",
+        "reflect-metadata": "^0.2.2",
         "rimraf": "^5.0.7",
         "tailwindcss": "^3.4.1"
     }

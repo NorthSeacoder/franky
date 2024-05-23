@@ -11,8 +11,10 @@
     "scripts": {
         "cz": "git add . && git-cz",
         "cl": "conventional-changelog -p angular -i CHANGELOG.md -s -r 0",
+        "dev":"nr -F view watch ",
         "dev:extension": "pnpm run -F extension dev",
         "build": "run-s build:*",
+        "build:view":"pnpm run -F view build",
         "build:extension": "pnpm run -F extension build",
         "lint": "eslint .",
         "publish": "pnpm run -F extension  publish",

@@ -15,5 +15,5 @@ export default defineConfig({
   external: [
     'vscode',
   ],
-  noExternal:["tailwindcss","css-to-tailwindcss","handlebars","mkdirp","rimraf"]
+  noExternal:["tailwindcss","css-to-tailwindcss","handlebars","mkdirp","rimraf",'html-modifier','cec-client-server']
 })
