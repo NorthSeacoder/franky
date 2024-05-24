@@ -1,0 +1,23 @@
+.FrankyForm {
+  display: flex;
+  flex-direction: column;
+  row-gap: 16px;
+}
+
+.TextField {
+  display: grid;
+  grid-template-columns: 100px 1fr;
+  align-items: center;
+}
+
+.FilePathSelect {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+}
+
+.FilePathSelect span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

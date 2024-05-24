@@ -20,14 +20,6 @@ class VSCodeAPIWrapper {
     }
   }
 
-  /**
-   * Post a message (i.e. send arbitrary data) to the owner of the webview.
-   *
-   * @remarks When running webview code inside a web browser, postMessage will instead
-   * log the given message to the console.
-   *
-   * @param message Abitrary data (must be JSON serializable) to send to the extension context.
-   */
   public postMessage(message: unknown) {
     if (this.vsCodeApi) {
       this.vsCodeApi.postMessage(message);
@@ -58,40 +50,21 @@ class VSCodeAPIWrapper {
       })
     })
   }
-  /**
-   * Get the persistent state stored for this webview.
-   *
-   * @remarks When running webview source code inside a web browser, getState will retrieve state
-   * from local storage (https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage).
-   *
-   * @return The current state or `undefined` if no state has been set.
-   */
-  public getState(): unknown | undefined {
+
+  async getState(key: string):Promise<unknown | undefined> {
     if (this.vsCodeApi) {
-      return this.vsCodeApi.getState();
+      return await this.invoke({ command: 'getState', args: [key] })
     } else {
-      const state = localStorage.getItem("vscodeState");
-      return state ? JSON.parse(state) : undefined;
+      const state = localStorage.getItem(key)
+      return state ? JSON.parse(state) : undefined
     }
   }
 
-  /**
-   * Set the persistent state stored for this webview.
-   *
-   * @remarks When running webview source code inside a web browser, setState will set the given
-   * state using local storage (https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage).
-   *
-   * @param newState New persisted state. This must be a JSON serializable object. Can be retrieved
-   * using {@link getState}.
-   *
-   * @return The new state.
-   */
-  public setState<T extends unknown | undefined>(newState: T): T {
+  async setState<T extends unknown | undefined>(key: string, newState: T): Promise<void> {
     if (this.vsCodeApi) {
-      return this.vsCodeApi.setState(newState);
+      return await this.invoke({ command: 'setState', args: [key, newState] })
     } else {
-      localStorage.setItem("vscodeState", JSON.stringify(newState));
-      return newState;
+      localStorage.setItem(key, JSON.stringify(newState))
     }
   }
 }
