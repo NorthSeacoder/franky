@@ -3,6 +3,7 @@ import {getUri} from './utils';
 import * as path from 'path';
 import {emptyDir, mkdirp, pathExists, readdir, remove, readFileSync} from 'fs-extra';
 import {modifyHtml} from 'html-modifier';
+import {log} from '@utils/log';
 
 export default class CreateProjectPanel {
     public static currentPanel: CreateProjectPanel | undefined;
@@ -113,48 +114,6 @@ export default class CreateProjectPanel {
             }
         });
     }
-    /**
-     * Defines and returns the HTML that should be rendered within the webview panel.
-     *
-     * @remarks This is also the place where references to the React webview build files
-     * are created and inserted into the webview HTML.
-     *
-     * @param webview A reference to the extension webview
-     * @param extensionUri The URI of the directory containing the extension
-     * @returns A template string literal containing the HTML that should be
-     * rendered within the webview panel
-     */
-    private _getWebviewContent(webview: vscode.Webview, extensionUri: vscode.Uri) {
-        // The CSS file from the React build output
-        const stylesUri = getUri(webview, extensionUri, ['webview-ui', 'build', 'assets', 'index.css']);
-        // The JS file from the React build output
-        const scriptUri = getUri(webview, extensionUri, ['webview-ui', 'build', 'assets', 'index.js']);
-        const ttfUri = getUri(webview, extensionUri, ['webview-ui', 'build', 'assets', 'codicon.ttf']);
-
-        // Tip: Install the es6-string-html VS Code extension to enable code highlighting below
-        return /*html*/ `
-      <!DOCTYPE html>
-      <html lang="en">
-        <head>
-          <meta charset="UTF-8" />
-          <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-          <link rel="stylesheet" type="text/css" href="${stylesUri}">
-          <style>
-            @font-face {
-              font-family: "codicon";
-              font-display: block;
-              src: url("${ttfUri}") format("truetype");
-            }
-          </style>
-          <title>New Project</title>
-        </head>
-        <body>
-          <div id="root"></div>
-          <script type="module" src="${scriptUri}"></script>
-        </body>
-      </html>
-    `;
-    }
 
     /**
      * Sets up an event listener to listen for messages passed from the webview context and
@@ -166,6 +125,7 @@ export default class CreateProjectPanel {
     private _setWebviewMessageListener(webview: vscode.Webview) {
         const map = new Map<string, (...args: any[]) => any>();
         map.set('hello', (text: string) => {
+            log.info('hello', text);
             vscode.window.showInformationMessage(text);
         });
         map.set('selectPath', async () => {
