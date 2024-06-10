@@ -1,26 +1,22 @@
-import {
-    VSCodeButton,
-    VSCodeCheckbox,
-    VSCodeDropdown,
-    VSCodeOption,
-    VSCodeTextField
-} from '@vscode/webview-ui-toolkit/react';
-import React, {useState} from 'react';
-import {useMount} from 'react-use';
+import {Button, Checkbox, Form, Input, Select} from 'antd';
+
+import {FolderOpen} from 'lucide-react';
+import {useState} from 'react';
+import {useMount, useUpdateEffect} from 'react-use';
 import {vscode} from '../../utils/vscode';
-import css from './index.module.css';
+
+interface IOption {
+    label?: string;
+    field: string;
+}
 interface BaseConfig {
     field: string;
     label: string;
     default?: string | boolean;
 }
-
 interface SelectConfig extends BaseConfig {
     type: 'select';
-    options: {
-        label: string;
-        field: string;
-    }[];
+    options: IOption[];
 }
 
 interface CheckboxConfig extends BaseConfig {
@@ -31,135 +27,108 @@ interface InputConfig extends BaseConfig {
     type: 'input';
 }
 
-type Conifg = SelectConfig | CheckboxConfig | InputConfig;
+type IExtraOptions = SelectConfig | CheckboxConfig | InputConfig;
 
-interface FrankyFormProps {
-    configs: Conifg[];
-}
 interface FormsValues extends Record<string, unknown> {
     location: string;
     name: string;
     template: string;
 }
-function TextField(props: {label: string; field: string; children: React.ReactNode}) {
-    return (
-        <div key={props.field} className={css.TextField}>
-            <label htmlFor={props.field}>{props.label}：</label>
-            {props.children}
-        </div>
-    );
-}
 
-function FilePathSelect(props: {value: string; onChange(value: string): void}) {
-    async function onSelectPath() {
-        const res = await vscode.invoke({command: 'selectPath'});
-        if (res) {
-            props.onChange(res);
-        }
-    }
-    return (
-        <VSCodeTextField
-            value={props.value ?? ''}
-            onChange={(e) => props.onChange((e as React.ChangeEvent<HTMLInputElement>).target.value)}>
-            <i slot='end' className={'codicon codicon-folder'} onClick={onSelectPath} />
-        </VSCodeTextField>
-    );
-}
+export default function FrankyForm() {
+    const [form] = Form.useForm<FormsValues>();
 
-export default function FrankyForm(props: FrankyFormProps) {
-    const [form, setForm] = useState<FormsValues>({} as FormsValues);
     useMount(async () => {
-        const store = (await vscode.getState('FrankyForm')) as {location: string};
+        //获取缓存数据
+        const store = (await vscode.getState('FrankyForm')) as FormsValues;
+
+        //获取当前路径
         const currentPath = await vscode.invoke({command: 'getCurrentPath'});
         const init = {
-            ...props.configs.reduce((res, item) => {
-                if (item.default !== undefined) {
-                    res[item.field] = item.default;
-                }
-                return res;
-            }, {} as FormsValues),
-            location: currentPath
-        } as FormsValues;
+            location: currentPath,
+            name: '',
+            template: ''
+        };
         if (store) {
             const other = {...store, location: currentPath};
             Object.assign(init, other);
         }
-        setForm(init);
+        form.setFieldsValue(init);
     });
-    async function onChange(field: string, value: unknown) {
-        const val = {...form, [field]: value};
-        setForm(val);
-        await vscode.setState('FrankyForm', val);
+
+    //template
+    const [TemplateOptions, setTemplateOptions] = useState<IOption[]>([]);
+    const [optionsMap, setOptionsMap] = useState<Record<string, IExtraOptions[]>>({});
+
+    useMount(async () => {
+        //select options
+        const {tploptions, ExtraOptionsMap} = await vscode.invoke({command: 'getTemplateOptions'});
+        setTemplateOptions(tploptions);
+        setOptionsMap(ExtraOptionsMap);
+    });
+    async function onSelectPath() {
+        const loc = form.getFieldValue('location');
+        console.log(loc);
+        const res = await vscode.invoke({command: 'selectPath', args: [loc]});
+        if (res) {
+            form.setFieldValue('location', res);
+        }
     }
 
-    async function onCreate(e: React.FormEvent<HTMLFormElement>) {
-        e.preventDefault();
+    const [options, setOptions] = useState<IExtraOptions[]>([]);
+    const templateValue = Form.useWatch('template', form);
+    useUpdateEffect(() => {
+        const newOptions = optionsMap[templateValue] || [];
+        setOptions(newOptions);
+    }, [templateValue, JSON.stringify(optionsMap)]);
 
-        const data = {
-            location: form.location,
-            flags: props.configs
-                .filter((item) => form[item.field] !== undefined)
-                .map((item) => '--' + item.field + '=' + form[item.field])
-                .filter((item) => item !== undefined)
-        };
-        console.log('onCreate: ', form, data);
+    async function onCreate() {
         await vscode.invoke({
             command: 'createProject',
-            args: [data]
+            args: [form.getFieldsValue()]
         });
     }
     return (
-        <form className={css.FrankyForm} onSubmit={onCreate}>
-            <TextField label={'选择模板'} field={'template'}>
-                <VSCodeTextField
-                    value={form.template}
-                    onChange={(e) => onChange('template', (e as React.ChangeEvent<HTMLInputElement>).target.value)}
-                />
-            </TextField>
-            <TextField label={'Name'} field={'name'}>
-                <VSCodeTextField
-                    value={form.name}
-                    onChange={(e) => onChange('name', (e as React.ChangeEvent<HTMLInputElement>).target.value)}
-                />
-            </TextField>
-            <TextField label={'Location'} field={'location'}>
-                <FilePathSelect value={form.location} onChange={(value) => onChange('location', value)} />
-            </TextField>
-            {props.configs.map((item) => (
-                <TextField key={item.field} label={item.label} field={item.field}>
-                    {item.type === 'select' ? (
-                        <VSCodeDropdown
-                            key={item.field}
-                            value={form[item.field] as string}
-                            onChange={(e) =>
-                                onChange(item.field, (e as React.ChangeEvent<HTMLSelectElement>).target.value)
-                            }>
-                            {item.options.map((item) => (
-                                <VSCodeOption key={item.field}>{item.label}</VSCodeOption>
-                            ))}
-                        </VSCodeDropdown>
-                    ) : item.type === 'checkbox' ? (
-                        <VSCodeCheckbox
-                            id={item.field}
-                            checked={form[item.field] as boolean}
-                            onChange={(e) =>
-                                onChange(item.field, (e as React.ChangeEvent<HTMLInputElement>).target.checked)
-                            }>
-                            {item.label}
-                        </VSCodeCheckbox>
-                    ) : item.type === 'input' ? (
-                        <VSCodeTextField
-                            value={(form[item.field] as string) ?? ''}
-                            onChange={(e) =>
-                                onChange(item.field, (e as React.ChangeEvent<HTMLInputElement>).target.value)
-                            }
-                        />
-                    ) : null}
-                </TextField>
-            ))}
-            <div>
-                <VSCodeButton type={'submit'}>Create</VSCodeButton>
-            </div>
-        </form>
+        <>
+            <Form form={form} layout='vertical' autoComplete='off'>
+                <Form.Item name='name' label='Name'>
+                    <Input />
+                </Form.Item>
+                <Form.Item name='location' label='Location'>
+                    <Input addonAfter={<FolderOpen style={{cursor: 'pointer'}} size={20} onClick={onSelectPath} />} />
+                </Form.Item>
+                <Form.Item name='template' label='选择模板'>
+                    <Select fieldNames={{value: 'field'}} options={TemplateOptions} />
+                </Form.Item>
+                {/* extra-form */}
+                {options.map((item) => {
+                    if (item.type === 'select') {
+                        return (
+                            <Form.Item key={item.field} name={item.field} label={item.label}>
+                                <Select fieldNames={{value: 'field'}} options={item.options} />
+                            </Form.Item>
+                        );
+                    }
+                    if (item.type === 'checkbox') {
+                        return (
+                            <Form.Item key={item.field} name={item.field} valuePropName='checked'>
+                                <Checkbox>{item.label}</Checkbox>
+                            </Form.Item>
+                        );
+                    }
+                    if (item.type === 'input') {
+                        return (
+                            <Form.Item key={item.field} name={item.field} label={item.label}>
+                                <Input />
+                            </Form.Item>
+                        );
+                    }
+                    return null;
+                })}
+            </Form>
+            <Button type='primary' onClick={onCreate}>
+                确认
+            </Button>
+        </>
     );
 }

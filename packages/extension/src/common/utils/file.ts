@@ -22,9 +22,56 @@ export async function directoryToAdd(uri: Uri, directory: string) {
     }
     return path.concat(`/${directory}`);
 }
+interface IOption {
+    label?: string;
+    field: string;
+}
+interface BaseConfig {
+    field: string;
+    label: string;
+    default?: string | boolean | string[];
+}
+interface SelectConfig extends BaseConfig {
+    type: 'select';
+    options: IOption[];
+}
 
+interface CheckboxConfig extends BaseConfig {
+    type: 'checkbox';
+}
+
+interface InputConfig extends BaseConfig {
+    type: 'input';
+}
+
+type IExtraOptions = SelectConfig | CheckboxConfig | InputConfig;
+const extraOptions: IExtraOptions[] = [
+    {
+        type: 'select',
+        label: 'Select ',
+        field: 'select',
+        default: 'b',
+        options: [
+            {field: 'a', label: 'packageA'},
+            {field: 'b', label: 'packageB'}
+        ]
+    },
+    {
+        type: 'checkbox',
+        label: '是否 xxx',
+        field: 'checkbox',
+        default: true
+    },
+    {
+        type: 'input',
+        label: 'input',
+        field: 'input',
+        default: 'default'
+    }
+];
 export async function readPackageDetails(folderPath: string) {
-    const subFolderDetail: QuickPickItem[] = [];
+    const tploptions: IOption[] = [];
+    const ExtraOptionsMap: Record<string, IExtraOptions[]> = {};
     try {
         const subFolders = await fs.promises.readdir(folderPath, {withFileTypes: true});
         for (const folder of subFolders) {
@@ -33,14 +80,16 @@ export async function readPackageDetails(folderPath: string) {
                 try {
                     const packageJson = await fs.promises.readFile(packageJsonPath, 'utf-8');
                     const packageData = JSON.parse(packageJson);
-                    subFolderDetail.push({
-                        label: packageData.name,
-                        description: packageData.name + '@' + packageData.version
+                    tploptions.push({
+                        field: packageData.name,
+                        label: packageData.name + '@' + packageData.version
                     });
+                    ExtraOptionsMap[packageData.name] = packageData.extraOptions ?? extraOptions;
                 } catch (err: any) {
                     if (err.code === 'ENOENT') {
                         // package.json does not exist in this folder
-                        subFolderDetail.push({label: folder.name});
+                        tploptions.push({field: folder.name});
+                        ExtraOptionsMap[folder.name] = [];
                         log.info(`No package.json found in ${folder.name}.`);
                     } else {
                         log.info(`Error reading package.json in ${folder.name}:`, err);
@@ -51,7 +100,7 @@ export async function readPackageDetails(folderPath: string) {
     } catch (err) {
         log.info('Error reading root directory:', err);
     }
-    return subFolderDetail;
+    return {tploptions, ExtraOptionsMap};
 }
 
 export async function copyFolder(src: string, dest: string, templateProps: any) {

@@ -1,13 +1,13 @@
 import vscode from 'vscode';
 import path from 'path';
 import fs from 'fs';
-import os from 'os';
 
-import Config from '@utils/config';
 import { log } from '@utils/log';
 
 import {readdir, stat, mkdir, readfile, exists, writefile, rmrf, unlink, rename, normalizeNFC} from './utils';
 import FileStat from './file-stat';
+
+import {getLoaclPath} from '../utils'
 interface Entry {
     uri: vscode.Uri;
     type: vscode.FileType;
@@ -142,9 +142,7 @@ export class FileSystemProvider implements vscode.TreeDataProvider<Entry>, vscod
             return children.map(([name, type]) => ({uri: vscode.Uri.file(path.join(element.uri.fsPath, name)), type}));
         }
 
-        const templateLocal = Config.templateLocal
-        const localPath = path.join(os.tmpdir(), templateLocal,'tpls');
-
+        const localPath = getLoaclPath('tpls');
         if(localPath){
             log.info(localPath)
             const localUri = vscode.Uri.file(localPath);

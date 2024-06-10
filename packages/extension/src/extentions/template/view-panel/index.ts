@@ -5,6 +5,10 @@ import {emptyDir, mkdirp, pathExists, readdir, remove, readFileSync} from 'fs-ex
 import {modifyHtml} from 'html-modifier';
 import {log} from '@utils/log';
 
+import {readPackageDetails} from '@utils/file';
+
+import {getLoaclPath} from '../utils'
+
 export default class CreateProjectPanel {
     public static currentPanel: CreateProjectPanel | undefined;
     private readonly _panel: vscode.WebviewPanel;
@@ -128,13 +132,14 @@ export default class CreateProjectPanel {
             log.info('hello', text);
             vscode.window.showInformationMessage(text);
         });
-        map.set('selectPath', async () => {
+        map.set('selectPath', async (loc) => {
+            log.info('selectPath', loc);
             const res = await vscode.window.showOpenDialog({
                 canSelectFiles: false,
                 canSelectFolders: true,
                 canSelectMany: false,
                 title: 'Location',
-                defaultUri: this.cwd ? vscode.Uri.file(this.cwd) : undefined
+                defaultUri: loc ? vscode.Uri.file(loc) : undefined
             });
             if (!res) {
                 return null;
@@ -165,6 +170,12 @@ export default class CreateProjectPanel {
         });
         // map.set('getGenerators', () => vscode.workspace.getConfiguration('newProject').get('generators'));
         map.set('getCurrentPath', () => this.cwd);
+        map.set('geLocalPath', () => getLoaclPath());
+        map.set('getTemplateOptions', async () => {
+            const localPath  = getLoaclPath('tpls');
+            const templatesDeatil = await readPackageDetails(localPath);
+            return templatesDeatil;
+        });
         map.set('getState', (key: string) => this.globalState.get(key));
         map.set('setState', (key: string, value: any) => this.globalState.update(key, value));
 
@@ -172,7 +183,8 @@ export default class CreateProjectPanel {
             async (message: any) => {
                 const {command, data = [], callback} = message;
                 if (!map.has(command)) {
-                    throw new Error(`找不到命令 ${command}`);
+                    console.log(map, command, data)
+                    throw new Error(`找不到命令1 ${command}`);
                 }
                 const res = await map.get(command)!(...data);
                 if (callback) {

@@ -3,9 +3,8 @@ import vscode from 'vscode';
 import {mkdirp} from 'mkdirp';
 import {rimraf} from 'rimraf';
 import simpleGit from 'simple-git';
-import path from 'path';
-import os from 'os';
 import { log } from '@utils/log';
+import {getLoaclPath} from '../utils'
 
 import Config from '@utils/config';
 function massageError(error: Error & {code?: string}): Error {
@@ -111,10 +110,9 @@ const git = simpleGit();
 
 export async function updateTemplatesRepo() {
     const url = Config.templateRepository
-    const templateLocal = Config.templateLocal
-    const localPath = path.join(os.tmpdir(), templateLocal);
+    const localPath = getLoaclPath();
     try {
-        log.info(url,templateLocal,localPath,fs.existsSync(localPath))
+        log.info(url,localPath,fs.existsSync(localPath))
         if (fs.existsSync(localPath)) {
           // 如果本地已经有模板仓库，就拉取最新的变更
           await git.cwd(localPath).pull();
