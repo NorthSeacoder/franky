@@ -1,7 +1,7 @@
 import {Button, Checkbox, Form, Input, Select} from 'antd';
 
 import {FolderOpen} from 'lucide-react';
-import {useState} from 'react';
+import {useState, useEffect} from 'react';
 import {useMount, useUpdateEffect} from 'react-use';
 import {vscode} from '../../utils/vscode';
 
@@ -66,6 +66,7 @@ export default function FrankyForm() {
         setTemplateOptions(tploptions);
         setOptionsMap(ExtraOptionsMap);
     });
+
     async function onSelectPath() {
         const loc = form.getFieldValue('location');
         console.log(loc);
@@ -84,10 +85,25 @@ export default function FrankyForm() {
 
     async function onCreate() {
         await vscode.invoke({
-            command: 'createProject',
+            command: 'generateCode',
             args: [form.getFieldsValue()]
         });
     }
+    function currentPathWatcher(event: MessageEvent) {
+        const {
+            data: {command, cwd}
+        } = event;
+        if (command === 'currentPathWatcher') {
+            form.setFieldValue('location', cwd);
+        }
+    }
+
+    useEffect(() => {
+        window.addEventListener('message', currentPathWatcher);
+        return () => {
+            window.removeEventListener('message', currentPathWatcher);
+        };
+    }, []);
     return (
         <>
             <Form form={form} layout='vertical' autoComplete='off'>

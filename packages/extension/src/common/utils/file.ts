@@ -1,5 +1,6 @@
-import {Uri, workspace, QuickPickItem} from 'vscode';
+import {Uri, workspace, window} from 'vscode';
 import fs from 'fs';
+import { emptyDir, mkdirp, pathExists, readdir, remove } from 'fs-extra'
 import path from 'path';
 import {log} from '@utils/log';
 import Handlebars from 'handlebars';
@@ -105,8 +106,19 @@ export async function readPackageDetails(folderPath: string) {
 
 export async function copyFolder(src: string, dest: string, templateProps: any) {
     try {
+        if (await pathExists(dest)) {
+            if ((await readdir(dest)).length > 0) {
+              const answer = await window.showInformationMessage('同名文件夹已存在, 是否覆盖?','是')
+              log.info('answer',answer)
+              if (!answer) {
+                return Promise.reject()
+              }
+              await emptyDir(dest)
+            }
+        } else {
+              await mkdirp(dest)
+          }
         // 创建目标文件夹（如果不存在）
-        await fs.promises.mkdir(dest, {recursive: true});
 
         // 读取源文件夹内容
         const items = await fs.promises.readdir(src, {withFileTypes: true});

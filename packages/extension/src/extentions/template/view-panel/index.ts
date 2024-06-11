@@ -5,9 +5,9 @@ import {emptyDir, mkdirp, pathExists, readdir, remove, readFileSync} from 'fs-ex
 import {modifyHtml} from 'html-modifier';
 import {log} from '@utils/log';
 
-import {readPackageDetails} from '@utils/file';
+import {readPackageDetails, copyFolder} from '@utils/file';
 
-import {getLoaclPath} from '../utils'
+import {getLoaclPath} from '../utils';
 
 export default class CreateProjectPanel {
     public static currentPanel: CreateProjectPanel | undefined;
@@ -45,11 +45,16 @@ export default class CreateProjectPanel {
      * @param extensionUri The URI of the directory containing the extension.
      */
     public static render(extensionUri: vscode.Uri, globalState: vscode.Memento, cwd?: string) {
+        log.info('render', cwd);
         if (CreateProjectPanel.currentPanel) {
             // If the webview panel already exists reveal it
             CreateProjectPanel.currentPanel._panel.reveal(vscode.ViewColumn.One);
             CreateProjectPanel.currentPanel.cwd = cwd;
             CreateProjectPanel.currentPanel.globalState = globalState;
+            CreateProjectPanel.currentPanel._panel.webview.postMessage({
+                command: 'currentPathWatcher',
+                cwd
+            });
         } else {
             // If a webview panel does not already exist create and show a new one
             const panel = vscode.window.createWebviewPanel(
@@ -79,15 +84,16 @@ export default class CreateProjectPanel {
         CreateProjectPanel.currentPanel = undefined;
 
         // Dispose of the current webview panel
-        this._panel.dispose();
+        log.info('dispose',this._panel)
+        this._panel?.dispose();
 
         // Dispose of all disposables (i.e. commands) for the current webview panel
-        while (this._disposables.length) {
-            const disposable = this._disposables.pop();
-            if (disposable) {
-                disposable.dispose();
-            }
-        }
+        // while (this._disposables.length) {
+        //     const disposable = this._disposables.pop();
+        //     if (disposable) {
+        //         disposable.dispose();
+        //     }
+        // }
     }
     /**
      * 处理前端应用 index.html 文件的方法
@@ -128,6 +134,7 @@ export default class CreateProjectPanel {
      */
     private _setWebviewMessageListener(webview: vscode.Webview) {
         const map = new Map<string, (...args: any[]) => any>();
+        const _this = this;
         map.set('hello', (text: string) => {
             log.info('hello', text);
             vscode.window.showInformationMessage(text);
@@ -146,33 +153,27 @@ export default class CreateProjectPanel {
             }
             return vscode.Uri.parse(res[0].path).fsPath;
         });
-        interface CreateProjectData {
-            package: string;
-            command: string;
+        interface FormsValues {
+            [x: string]: unknown;
             location: string;
-            flags: string[];
+            name: string;
+            template: string;
         }
-        map.set('createProject', async (data: CreateProjectData) => {
-            const location = path.resolve(data.location);
-            if (await pathExists(location)) {
-                if ((await readdir(location)).length > 0) {
-                    const answer = await vscode.window.showInformationMessage('Project already exists', 'Yes', 'No');
-                    if (!answer) {
-                        return;
-                    }
-                    await emptyDir(location);
-                }
-            } else {
-                await mkdirp(location);
-            }
+        map.set('generateCode', async (data: FormsValues) => {
             // TODO: 生成文件
-            //this._panel.dispose();
+            const tplroot = getLoaclPath('tpls');
+            const {template, location, name, ...rest} = data;
+            const src = path.join(tplroot, template);
+            const target = path.join(location, name);
+            await copyFolder(src, target, {name, ...rest});
+            log.info('generateCode', src,target);
+            this.dispose();
         });
         // map.set('getGenerators', () => vscode.workspace.getConfiguration('newProject').get('generators'));
         map.set('getCurrentPath', () => this.cwd);
         map.set('geLocalPath', () => getLoaclPath());
         map.set('getTemplateOptions', async () => {
-            const localPath  = getLoaclPath('tpls');
+            const localPath = getLoaclPath('tpls');
             const templatesDeatil = await readPackageDetails(localPath);
             return templatesDeatil;
         });
@@ -183,7 +184,6 @@ export default class CreateProjectPanel {
             async (message: any) => {
                 const {command, data = [], callback} = message;
                 if (!map.has(command)) {
-                    console.log(map, command, data)
                     throw new Error(`找不到命令1 ${command}`);
                 }
                 const res = await map.get(command)!(...data);
