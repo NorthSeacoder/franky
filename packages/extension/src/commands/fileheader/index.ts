@@ -3,7 +3,7 @@ import type {TextDocument} from 'vscode';
 import {execSync} from 'child_process';
 import {log} from '@utils/log';
 import {getRangeFromDocument} from '@common/utils/tools';
-
+import Config from '@utils/config';
 import dayjs from 'dayjs';
 interface ITemplate {
     langId: string;
@@ -33,6 +33,7 @@ export const getTemplate = ({langId, name, time, LastModifiedTime}: ITemplate): 
 export default () => {
     const editor = window.activeTextEditor;
     if (!editor) return;
+    if(Config.disabledFileHeader) return;
     const langId = editor.document.languageId;
     let name = execSync('git config --get user.name').toString().trim();
     editor.edit(function (editBuilder) {
@@ -50,6 +51,7 @@ export default () => {
 export const fileheaderUpdate = (document: TextDocument) => {
     const editor = window.activeTextEditor;
     if (!editor) return;
+    if(Config.disabledFileHeader) return;
     const MAX_COMMENT_LINE = 8;
     const commentCtx = document.getText(new Range(0, 0, MAX_COMMENT_LINE, 0));
     const commentLineArray = commentCtx.split('\n');

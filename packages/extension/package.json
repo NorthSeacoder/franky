@@ -196,10 +196,15 @@
             "type": "object",
             "title": "franky Configuration",
             "properties": {
-                "franky.jenkins.url": {
+                "franky.fileheader.disabled": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "是否禁用fileheader功能"
+                },
+                "franky.cicd.url": {
                     "type": "string",
                     "default": "https://www.jenkins.io/",
-                    "description": "your jenkins url,default value is jenkins's homepage"
+                    "description": "your cicd url,default value is jenkins's homepage"
                 },
                 "franky.templates.repository": {
                     "type": "string",

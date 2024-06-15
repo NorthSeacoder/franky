@@ -4,7 +4,6 @@ import {StatusBarAlignment, commands, window, workspace, ViewColumn, Uri} from '
 
 import {ctx} from '@common/context';
 
-import FileExplorer from '@commands/template/file-explorer';
 import {CommandManager} from '@commands/index';
 import {log, channel} from '@utils/log';
 
