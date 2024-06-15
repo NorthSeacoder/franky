@@ -16,7 +16,7 @@
     "paths": {
       "@common/*": ["./src/common/*"],
       "@utils/*": ["./src/common/utils/*"],
-      "@extentions/*": ["./src/extentions/*"],
+      "@commands/*": ["./src/commands/*"],
       "@/*": ["./src/*"],
     },
   },

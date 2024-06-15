@@ -1,4 +1,4 @@
-import {Button, Checkbox, Form, Input, Select} from 'antd';
+import {Button, Checkbox, Form, Input, Select, Typography} from 'antd';
 
 import {FolderOpen} from 'lucide-react';
 import {useState, useEffect} from 'react';
@@ -35,6 +35,12 @@ interface FormsValues extends Record<string, unknown> {
     template: string;
 }
 
+interface IPackageJson {
+    name: string;
+    version: string;
+    description: string;
+    extraOptions: IExtraOptions[];
+}
 export default function FrankyForm() {
     const [form] = Form.useForm<FormsValues>();
 
@@ -58,13 +64,13 @@ export default function FrankyForm() {
 
     //template
     const [TemplateOptions, setTemplateOptions] = useState<IOption[]>([]);
-    const [optionsMap, setOptionsMap] = useState<Record<string, IExtraOptions[]>>({});
+    const [pkgMap, setPkgMap] = useState<Record<string, IPackageJson>>({});
 
     useMount(async () => {
         //select options
-        const {tploptions, ExtraOptionsMap} = await vscode.invoke({command: 'getTemplateOptions'});
+        const {tploptions, PackageDataMap} = await vscode.invoke({command: 'getTemplateOptions'});
         setTemplateOptions(tploptions);
-        setOptionsMap(ExtraOptionsMap);
+        setPkgMap(PackageDataMap);
     });
 
     async function onSelectPath() {
@@ -77,11 +83,14 @@ export default function FrankyForm() {
     }
 
     const [options, setOptions] = useState<IExtraOptions[]>([]);
+    const [details, setDeatils] = useState<string>('');
     const templateValue = Form.useWatch('template', form);
+    console.log('pkgMap', pkgMap);
     useUpdateEffect(() => {
-        const newOptions = optionsMap[templateValue] || [];
-        setOptions(newOptions);
-    }, [templateValue, JSON.stringify(optionsMap)]);
+        const curPkg = pkgMap?.[templateValue] ?? {};
+        setDeatils(curPkg.description ?? '');
+        setOptions(curPkg.extraOptions ?? []);
+    }, [templateValue, JSON.stringify(pkgMap)]);
 
     async function onCreate() {
         await vscode.invoke({
@@ -106,15 +115,23 @@ export default function FrankyForm() {
     }, []);
     return (
         <>
+            <Typography.Paragraph
+                ellipsis={{
+                    rows: 3,
+                    expandable: 'collapsible'
+                }}
+                >
+                {details}
+            </Typography.Paragraph>
             <Form form={form} layout='vertical' autoComplete='off'>
+                <Form.Item name='template' label='选择模板'>
+                    <Select fieldNames={{value: 'field'}} options={TemplateOptions} />
+                </Form.Item>
                 <Form.Item name='name' label='Name'>
                     <Input />
                 </Form.Item>
                 <Form.Item name='location' label='Location'>
                     <Input addonAfter={<FolderOpen style={{cursor: 'pointer'}} size={20} onClick={onSelectPath} />} />
-                </Form.Item>
-                <Form.Item name='template' label='选择模板'>
-                    <Select fieldNames={{value: 'field'}} options={TemplateOptions} />
                 </Form.Item>
                 {/* extra-form */}
                 {options.map((item) => {

@@ -53,8 +53,8 @@
                 "category": "Franky"
             },
             {
-                "command": "franky.jenkins",
-                "title": "跳转jenkins",
+                "command": "franky.jumpCicd",
+                "title": "跳转cicd 页面",
                 "category": "Franky"
             },
             {
@@ -91,9 +91,33 @@
                 "command": "franky.generate.css2tailwind",
                 "title": "根据复制的CSS生成TailwindCSS 类名",
                 "category": "Franky"
+            },
+            {
+                "command": "franky.template.pull",
+                "title": "拉取最新模板",
+                "category": "Franky",
+                "icon": "$(refresh)"
+            },
+            {
+                "command": "franky.template.open",
+                "title": "打开模板文件夹",
+                "category": "Franky",
+                "icon": "$(file-directory)"
             }
         ],
         "menus": {
+            "view/title": [
+                {
+                    "command": "franky.template.open",
+                    "when": "view == fileExplorer",
+                    "group": "navigation"
+                },
+                {
+                    "command": "franky.template.pull",
+                    "when": "view == fileExplorer",
+                    "group": "navigation"
+                }
+            ],
             "explorer/context": [
                 {
                     "submenu": "franky.explorerAction",
@@ -240,8 +264,9 @@
     "dependencies": {
         "css-to-tailwindcss": "^1.0.5",
         "fs-extra": "^11.2.0",
-        "html-modifier": "^1.2.0",
         "handlebars": "^4.7.8",
+        "html-modifier": "^1.2.0",
+        "mkdirp": "^3.0.1",
         "rimraf": "^5.0.7",
         "tailwindcss": "^3.4.1"
     }

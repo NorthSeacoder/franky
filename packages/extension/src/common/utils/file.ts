@@ -72,7 +72,7 @@ const extraOptions: IExtraOptions[] = [
 ];
 export async function readPackageDetails(folderPath: string) {
     const tploptions: IOption[] = [];
-    const ExtraOptionsMap: Record<string, IExtraOptions[]> = {};
+    const PackageDataMap: Record<string, any> = {};
     try {
         const subFolders = await fs.promises.readdir(folderPath, {withFileTypes: true});
         for (const folder of subFolders) {
@@ -85,12 +85,12 @@ export async function readPackageDetails(folderPath: string) {
                         field: packageData.name,
                         label: packageData.name + '@' + packageData.version
                     });
-                    ExtraOptionsMap[packageData.name] = packageData.extraOptions ?? extraOptions;
+                    PackageDataMap[packageData.name] = packageData;
                 } catch (err: any) {
                     if (err.code === 'ENOENT') {
                         // package.json does not exist in this folder
                         tploptions.push({field: folder.name});
-                        ExtraOptionsMap[folder.name] = [];
+                        PackageDataMap[folder.name] = {};
                         log.info(`No package.json found in ${folder.name}.`);
                     } else {
                         log.info(`Error reading package.json in ${folder.name}:`, err);
@@ -101,7 +101,7 @@ export async function readPackageDetails(folderPath: string) {
     } catch (err) {
         log.info('Error reading root directory:', err);
     }
-    return {tploptions, ExtraOptionsMap};
+    return {tploptions, PackageDataMap};
 }
 
 export async function copyFolder(src: string, dest: string, templateProps: any) {

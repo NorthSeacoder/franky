@@ -3,13 +3,10 @@ import type {ExtensionContext} from 'vscode';
 import {StatusBarAlignment, commands, window, workspace, ViewColumn, Uri} from 'vscode';
 
 import {ctx} from '@common/context';
-import fileheader, {fileheaderUpdate} from '@extentions/fileheader';
-import {genReactPage, genVuePage, genWpPage, genDefs, genFields, genTailwindCSS} from '@extentions/generate';
-import jenkins from '@extentions/jenkins';
-// import template from '@extentions/template';
-import FileExplorer from '@extentions/template/file-explorer';
-import ViewPanel from '@extentions/template/view-panel';
-import {log} from '@utils/log';
+
+import FileExplorer from '@commands/template/file-explorer';
+import {CommandManager} from '@commands/index';
+import {log, channel} from '@utils/log';
 
 export function activate(context: ExtensionContext) {
     try {
@@ -19,43 +16,16 @@ export function activate(context: ExtensionContext) {
         ctx.name = name;
         const {subscriptions} = context;
 
-        // 为指令 panel-view-container.show 注册行为
+        subscriptions.push(channel);
 
-        subscriptions.push(
-            commands.registerCommand('franky.fileheader', fileheader),
-            commands.registerCommand('franky.jenkins', jenkins),
-            commands.registerCommand('franky.generate.vue', genVuePage),
-            commands.registerCommand('franky.generate.react', genReactPage),
-            commands.registerCommand('franky.generate.wp', genWpPage),
-            commands.registerCommand('franky.generate.defs', genDefs),
-            commands.registerCommand('franky.generate.fields', genFields),
-            commands.registerCommand('franky.generate.css2tailwind', genTailwindCSS),
-            commands.registerCommand('franky.template', (uri: Uri) => {
-                //动态模板-panel
-                ViewPanel.render(
-                    context.extensionUri,
-                    context.globalState,
-                    uri?.fsPath ?? workspace.workspaceFolders?.[0].uri.fsPath
-                );
-            })
-
-            // commands.registerCommand('franky.template', template),
-        );
-        // window.showInformationMessage('Hello')
-
-        workspace.onDidSaveTextDocument((file) => {
-            setTimeout(() => {
-                fileheaderUpdate(file);
-            }, 200);
-        });
-
+        const cm = new CommandManager(context);
+        // new FileExplorer(context);
         const statusBar = window.createStatusBarItem(StatusBarAlignment.Left, 0);
-        statusBar.command = 'franky.jenkins';
-        statusBar.text = 'Jenkins';
-        statusBar.tooltip = 'Jump to Jenkins';
+        statusBar.command = 'franky.jumpCicd';
+        statusBar.text = 'cicd';
+        statusBar.tooltip = 'Jump to cicd';
         statusBar.show();
-
-        new FileExplorer(context);
+        cm.registerDisposable(statusBar)
     } catch (error) {
         log.debug('activate', error);
     }
