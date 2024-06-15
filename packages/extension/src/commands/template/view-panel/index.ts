@@ -4,6 +4,7 @@ import * as path from 'path';
 import {emptyDir, mkdirp, pathExists, readdir, remove, readFileSync} from 'fs-extra';
 import {modifyHtml} from 'html-modifier';
 import {log} from '@utils/log';
+import {handleName} from '@utils/tools';
 
 import {readPackageDetails, copyFolder} from '@utils/file';
 
@@ -164,7 +165,7 @@ export default class CreateProjectPanel {
             const {template, location, name, ...rest} = data;
             const src = path.join(tplroot, template);
             const target = path.join(location, name);
-            await copyFolder(src, target, {name, ...rest});
+            await copyFolder(src, target, {...handleName(name), ...rest});
             log.info('generateCode', src,target);
             this.dispose();
         });

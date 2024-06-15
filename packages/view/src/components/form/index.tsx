@@ -4,7 +4,8 @@ import {FolderOpen} from 'lucide-react';
 import {useState, useEffect} from 'react';
 import {useMount, useUpdateEffect} from 'react-use';
 import {vscode} from '../../utils/vscode';
-
+import { theme } from 'antd';
+const {useToken} =theme
 interface IOption {
     label?: string;
     field: string;
@@ -106,7 +107,8 @@ export default function FrankyForm() {
             form.setFieldValue('location', cwd);
         }
     }
-
+    const { token } = useToken();
+    console.log(token)
     useEffect(() => {
         window.addEventListener('message', currentPathWatcher);
         return () => {
@@ -119,18 +121,25 @@ export default function FrankyForm() {
                 ellipsis={{
                     rows: 3,
                     expandable: 'collapsible'
-                }}
-                >
+                }}>
                 {details}
             </Typography.Paragraph>
             <Form form={form} layout='vertical' autoComplete='off'>
                 <Form.Item name='template' label='选择模板'>
                     <Select fieldNames={{value: 'field'}} options={TemplateOptions} />
                 </Form.Item>
-                <Form.Item name='name' label='Name'>
+                <Form.Item
+                    name='name'
+                    label='Name'
+                    rules={[
+                        {required: true, message: '请输入项目名称'},
+                        {pattern: /^[a-z]+(-[a-z]+)*$/, message: '项目名称必须为kebab-case'}
+                    ]}>
                     <Input />
                 </Form.Item>
-                <Form.Item name='location' label='Location'>
+                <Form.Item name='location' label='Location' rules={[
+                    {required: true, message: '请选择生成路径'}
+                ]}>
                     <Input addonAfter={<FolderOpen style={{cursor: 'pointer'}} size={20} onClick={onSelectPath} />} />
                 </Form.Item>
                 {/* extra-form */}

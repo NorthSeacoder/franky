@@ -77,7 +77,7 @@ export async function readPackageDetails(folderPath: string) {
         const subFolders = await fs.promises.readdir(folderPath, {withFileTypes: true});
         for (const folder of subFolders) {
             if (folder.isDirectory()) {
-                const packageJsonPath = path.join(folderPath, folder.name, 'package.json');
+                const packageJsonPath = path.join(folderPath, folder.name, 'tpl.json');
                 try {
                     const packageJson = await fs.promises.readFile(packageJsonPath, 'utf-8');
                     const packageData = JSON.parse(packageJson);
@@ -91,9 +91,9 @@ export async function readPackageDetails(folderPath: string) {
                         // package.json does not exist in this folder
                         tploptions.push({field: folder.name});
                         PackageDataMap[folder.name] = {};
-                        log.info(`No package.json found in ${folder.name}.`);
+                        log.info(`No tpl.json found in ${folder.name}.`);
                     } else {
-                        log.info(`Error reading package.json in ${folder.name}:`, err);
+                        log.info(`Error reading tpl.json in ${folder.name}:`, err);
                     }
                 }
             }
@@ -131,8 +131,8 @@ export async function copyFolder(src: string, dest: string, templateProps: any) 
                 // 递归复制子文件夹
                 await copyFolder(srcPath, destPath, templateProps);
             } else if (item.isFile()) {
-                if (item.name === 'package.json') {
-                    // 跳过 package.json 文件
+                if (item.name === 'tpl.json') {
+                    // 跳过 tpl.json 文件
                     continue;
                 } else if (path.extname(item.name) === '.hbs') {
                     // 编译 .hbs 文件并写入目标文件夹

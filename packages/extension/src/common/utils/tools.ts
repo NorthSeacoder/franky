@@ -41,3 +41,17 @@ export function upperFirst(input: string): string {
 export function lowerFirst(input: string): string {
     return input.charAt(0).toLowerCase() + input.slice(1);
 }
+export interface NameInfo {
+    name: string; //kebab-case
+    camelName: string; //camelCase
+    capName: string; //CapCase
+}
+//capName, camelName, hyphenName,
+export function handleName(name: string): NameInfo {
+    const camelName = camelCase(name);
+    return {
+        name,
+        camelName,
+        capName: upperFirst(camelName)
+    };
+}
