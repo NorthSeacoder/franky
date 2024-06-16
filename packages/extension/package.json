@@ -1,5 +1,5 @@
 {
-    "name": "extension",
+    "name": "franky",
     "displayName": "Franky",
     "description": "tools in work",
     "version": "1.4.1",
@@ -43,6 +43,11 @@
         },
         "commands": [
             {
+                "command": "franky.version",
+                "title": "查看扩展信息",
+                "category": "Franky"
+            },
+            {
                 "command": "franky.fileheader",
                 "title": "fileheader",
                 "category": "Franky"
@@ -53,8 +58,8 @@
                 "category": "Franky"
             },
             {
-                "command": "franky.jenkins",
-                "title": "跳转jenkins",
+                "command": "franky.jumpCicd",
+                "title": "跳转cicd 页面",
                 "category": "Franky"
             },
             {
@@ -91,9 +96,33 @@
                 "command": "franky.generate.css2tailwind",
                 "title": "根据复制的CSS生成TailwindCSS 类名",
                 "category": "Franky"
+            },
+            {
+                "command": "franky.template.pull",
+                "title": "拉取最新模板",
+                "category": "Franky",
+                "icon": "$(refresh)"
+            },
+            {
+                "command": "franky.template.open",
+                "title": "打开模板文件夹",
+                "category": "Franky",
+                "icon": "$(file-directory)"
             }
         ],
         "menus": {
+            "view/title": [
+                {
+                    "command": "franky.template.open",
+                    "when": "view == fileExplorer",
+                    "group": "navigation"
+                },
+                {
+                    "command": "franky.template.pull",
+                    "when": "view == fileExplorer",
+                    "group": "navigation"
+                }
+            ],
             "explorer/context": [
                 {
                     "submenu": "franky.explorerAction",
@@ -172,10 +201,15 @@
             "type": "object",
             "title": "franky Configuration",
             "properties": {
-                "franky.jenkins.url": {
+                "franky.fileheader.disabled": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "是否禁用fileheader功能"
+                },
+                "franky.cicd.url": {
                     "type": "string",
                     "default": "https://www.jenkins.io/",
-                    "description": "your jenkins url,default value is jenkins's homepage"
+                    "description": "your cicd url,default value is jenkins's homepage"
                 },
                 "franky.templates.repository": {
                     "type": "string",
@@ -213,20 +247,22 @@
         ]
     },
     "scripts": {
-        "build": "rimraf dist && env NODE_ENV=production tsup",
+        "clear": "rimraf dist/extension",
+        "build": "rimraf dist/extension && env NODE_ENV=production tsup",
         "dev": "env NODE_ENV=development tsup",
         "lint": "eslint .",
         "vscode:prepublish": "nr build",
         "publish": "vsce publish",
-        "pack": "vsce package",
+        "pack": "vsce package --no-dependencies",
         "test": "vitest",
         "typecheck": "tsc --noEmit",
         "release": "bumpp && nr publish"
     },
     "devDependencies": {
+        "@types/fs-extra": "^11.0.4",
         "@types/node": "^20.9.0",
         "@types/vscode": "^1.83.0",
-        "@vscode/vsce": "^2.23.0",
+        "@vscode/vsce": "^2.26.0",
         "bumpp": "^9.2.0",
         "dayjs": "^1.10.7",
         "eslint": "^8.53.0",
@@ -237,7 +273,9 @@
     },
     "dependencies": {
         "css-to-tailwindcss": "^1.0.5",
+        "fs-extra": "^11.2.0",
         "handlebars": "^4.7.8",
+        "html-modifier": "^1.2.0",
         "mkdirp": "^3.0.1",
         "rimraf": "^5.0.7",
         "tailwindcss": "^3.4.1"

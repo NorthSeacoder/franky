@@ -1,6 +1,7 @@
 import type {TextDocument, Range} from 'vscode';
 import {Position} from 'vscode';
-
+import dayjs from 'dayjs';
+import {getGitInfo} from './git';
 export const isVue = (document: TextDocument) => {
     return document.languageId === 'vue';
 };
@@ -40,4 +41,28 @@ export function upperFirst(input: string): string {
 
 export function lowerFirst(input: string): string {
     return input.charAt(0).toLowerCase() + input.slice(1);
+}
+export interface NameInfo {
+    name: string; //kebab-case
+    camelName: string; //camelCase
+    capName: string; //CapCase
+}
+
+export function handleName(name: string): NameInfo {
+    const camelName = camelCase(name);
+    return {
+        name,
+        camelName,
+        capName: upperFirst(camelName)
+    };
+}
+
+export function getCommonRenderData() {
+    const timeCreated = dayjs().format('YYYY-MM-DD HH:mm:ss');
+    const {username, email} = getGitInfo();
+    return {
+        timeCreated,
+        username,
+        email
+    };
 }

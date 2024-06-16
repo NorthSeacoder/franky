@@ -11,10 +11,12 @@
     "skipDefaultLibCheck": true,
     "skipLibCheck": true,
     "baseUrl": ".",
+    "experimentalDecorators": true /* Add a polyfill for the Reflect API (examples below use reflect-metadata)  */,
+    "emitDecoratorMetadata": true /* Add a polyfill for the Reflect API (examples below use reflect-metadata). */,
     "paths": {
       "@common/*": ["./src/common/*"],
       "@utils/*": ["./src/common/utils/*"],
-      "@extentions/*": ["./src/extentions/*"],
+      "@commands/*": ["./src/commands/*"],
       "@/*": ["./src/*"],
     },
   },
