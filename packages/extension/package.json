@@ -252,7 +252,7 @@
         "dev": "env NODE_ENV=development tsup",
         "lint": "eslint .",
         "vscode:prepublish": "nr build",
-        "publish": "vsce publish",
+        "publish": "vsce publish --no-dependencies",
         "pack": "vsce package --no-dependencies",
         "test": "vitest",
         "typecheck": "tsc --noEmit",
