@@ -15,11 +15,11 @@
         "dev:extension": "pnpm run -F franky dev",
         "build": "run-s build:*",
         "build:view":"pnpm run -F view build",
-        "build:extension": "pnpm run -F extension build",
+        "build:extension": "pnpm run -F franky build",
         "lint": "eslint .",
-        "publish": "pnpm run -F extension  publish",
-        "pack": "pnpm run -F extension package",
-        "release": "pnpm run -F extension release"
+        "publish": "pnpm run -F franky  publish",
+        "pack": "pnpm run -F franky pack",
+        "release": "pnpm run -F franky release"
     },
     "devDependencies": {
         "@antfu/ni": "^0.21.9",
