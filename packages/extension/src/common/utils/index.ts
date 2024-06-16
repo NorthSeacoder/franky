@@ -3,7 +3,7 @@ import * as path from 'path';
 import * as vscode from 'vscode';
 
 import {ErrorInfo} from './types'
-
+import {log} from './log'
 // 获取插件版本
 export function getExtensionVersion(extensionContext: vscode.ExtensionContext) {
 	return new Promise<string>((resolve, reject) => {
@@ -34,7 +34,7 @@ export function showInformationMessage(message: string) {
 
 // 显示错误消息
 export function showErrorMessage(message: string) {
-	return vscode.window.showErrorMessage(message).then(() => { }, () => { });
+	return vscode.window.showErrorMessage(message).then(() => { }, (err) => { log.info('showErrorMessage-err',err)});
 }
 // 打开扩展设置
 export function openExtensionSettings(): Thenable<ErrorInfo> {

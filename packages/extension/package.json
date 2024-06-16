@@ -43,6 +43,11 @@
         },
         "commands": [
             {
+                "command": "franky.version",
+                "title": "查看扩展信息",
+                "category": "Franky"
+            },
+            {
                 "command": "franky.fileheader",
                 "title": "fileheader",
                 "category": "Franky"

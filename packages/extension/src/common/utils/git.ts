@@ -1,5 +1,6 @@
 import {workspace, window} from 'vscode';
 import simpleGit from 'simple-git';
+import {execSync} from 'child_process';
 
 export const logOption = {
     format: {
@@ -18,6 +19,7 @@ export const logOption = {
 
 export default () => {
     const editor = window.activeTextEditor;
+    if (!editor) return;
     const folder = workspace.getWorkspaceFolder(editor.document.uri);
     const options = {
         baseDir: folder?.uri?.path ?? workspace.rootPath,
@@ -25,4 +27,12 @@ export default () => {
         maxConcurrentProcesses: 6
     };
     return simpleGit(options);
+};
+const getGitConfig = (itemName: string) => execSync(`git config --get ${itemName}`).toString().trim();
+
+export const getGitInfo = () => {
+    return {
+        username: getGitConfig('user.name'),
+        email: getGitConfig('user.email')
+    };
 };

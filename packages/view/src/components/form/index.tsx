@@ -1,11 +1,10 @@
-import {Button, Checkbox, Form, Input, Select, Typography} from 'antd';
+import {Button, Checkbox, Form, Input, Select, Typography, Flex} from 'antd';
 
 import {FolderOpen} from 'lucide-react';
 import {useState, useEffect} from 'react';
 import {useMount, useUpdateEffect} from 'react-use';
 import {vscode} from '../../utils/vscode';
-import { theme } from 'antd';
-const {useToken} =theme
+import type {FormItemProps} from 'antd';
 interface IOption {
     label?: string;
     field: string;
@@ -13,6 +12,7 @@ interface IOption {
 interface BaseConfig {
     field: string;
     label: string;
+    itemProps?: FormItemProps;
     default?: string | boolean;
 }
 interface SelectConfig extends BaseConfig {
@@ -76,7 +76,6 @@ export default function FrankyForm() {
 
     async function onSelectPath() {
         const loc = form.getFieldValue('location');
-        console.log(loc);
         const res = await vscode.invoke({command: 'selectPath', args: [loc]});
         if (res) {
             form.setFieldValue('location', res);
@@ -86,7 +85,6 @@ export default function FrankyForm() {
     const [options, setOptions] = useState<IExtraOptions[]>([]);
     const [details, setDeatils] = useState<string>('');
     const templateValue = Form.useWatch('template', form);
-    console.log('pkgMap', pkgMap);
     useUpdateEffect(() => {
         const curPkg = pkgMap?.[templateValue] ?? {};
         setDeatils(curPkg.description ?? '');
@@ -94,9 +92,12 @@ export default function FrankyForm() {
     }, [templateValue, JSON.stringify(pkgMap)]);
 
     async function onCreate() {
+        await form.validateFields();
+        const values = form.getFieldsValue();
+        await vscode.setState('FrankyForm', values);
         await vscode.invoke({
             command: 'generateCode',
-            args: [form.getFieldsValue()]
+            args: [values]
         });
     }
     function currentPathWatcher(event: MessageEvent) {
@@ -107,8 +108,6 @@ export default function FrankyForm() {
             form.setFieldValue('location', cwd);
         }
     }
-    const { token } = useToken();
-    console.log(token)
     useEffect(() => {
         window.addEventListener('message', currentPathWatcher);
         return () => {
@@ -128,18 +127,23 @@ export default function FrankyForm() {
                 <Form.Item name='template' label='选择模板'>
                     <Select fieldNames={{value: 'field'}} options={TemplateOptions} />
                 </Form.Item>
-                <Form.Item
-                    name='name'
-                    label='Name'
-                    rules={[
-                        {required: true, message: '请输入项目名称'},
-                        {pattern: /^[a-z]+(-[a-z]+)*$/, message: '项目名称必须为kebab-case'}
-                    ]}>
-                    <Input />
-                </Form.Item>
-                <Form.Item name='location' label='Location' rules={[
-                    {required: true, message: '请选择生成路径'}
-                ]}>
+                <Flex>
+                    <Form.Item name='justFiles' valuePropName='checked'>
+                        <Checkbox>在当前文件夹下生成</Checkbox>
+                    </Form.Item>
+                    <Form.Item
+                        name='name'
+                        label='Name'
+                        layout='horizontal'
+                        style={{flex: 'auto'}}
+                        rules={[
+                            {required: true, message: '请输入项目名称'},
+                            {pattern: /^[a-z]+(-[a-z]+)*$/, message: '项目名称必须为kebab-case'}
+                        ]}>
+                        <Input />
+                    </Form.Item>
+                </Flex>
+                <Form.Item name='location' label='Location' rules={[{required: true, message: '请选择生成路径'}]}>
                     <Input addonAfter={<FolderOpen style={{cursor: 'pointer'}} size={20} onClick={onSelectPath} />} />
                 </Form.Item>
                 {/* extra-form */}
@@ -160,7 +164,7 @@ export default function FrankyForm() {
                     }
                     if (item.type === 'input') {
                         return (
-                            <Form.Item key={item.field} name={item.field} label={item.label}>
+                            <Form.Item {...item.itemProps} key={item.field} name={item.field} label={item.label}>
                                 <Input />
                             </Form.Item>
                         );

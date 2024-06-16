@@ -4,7 +4,7 @@ import * as path from 'path';
 import {emptyDir, mkdirp, pathExists, readdir, remove, readFileSync} from 'fs-extra';
 import {modifyHtml} from 'html-modifier';
 import {log} from '@utils/log';
-import {handleName} from '@utils/tools';
+import {handleName, getCommonRenderData} from '@utils/tools';
 
 import {readPackageDetails, copyFolder} from '@utils/file';
 
@@ -140,18 +140,21 @@ export default class CreateProjectPanel {
             vscode.window.showInformationMessage(text);
         });
         map.set('selectPath', async (loc) => {
-            log.info('selectPath', loc);
-            const res = await vscode.window.showOpenDialog({
-                canSelectFiles: false,
-                canSelectFolders: true,
-                canSelectMany: false,
-                title: 'Location',
-                defaultUri: loc ? vscode.Uri.file(loc) : undefined
-            });
-            if (!res) {
-                return null;
+            try {
+                const res = await vscode.window.showOpenDialog({
+                    canSelectFiles: false,
+                    canSelectFolders: true,
+                    canSelectMany: false,
+                    title: 'Location',
+                    defaultUri: loc ? vscode.Uri.file(loc) : undefined
+                });
+                if (!res) {
+                    return null;
+                }
+                return vscode.Uri.parse(res[0].path).fsPath;
+            } catch (error) {
+                log.debug('selectPath', error);
             }
-            return vscode.Uri.parse(res[0].path).fsPath;
         });
         interface FormsValues {
             [x: string]: unknown;
@@ -162,11 +165,11 @@ export default class CreateProjectPanel {
         map.set('generateCode', async (data: FormsValues) => {
             // TODO: 生成文件
             const tplroot = getLoaclPath('tpls');
-            const {template, location, name, ...rest} = data;
-            const src = path.join(tplroot, template);
-            const target = path.join(location, name);
-            await copyFolder(src, target, {...handleName(name), ...rest});
-            log.info('generateCode', src,target);
+            const {template, location, name, justFiles, ...rest} = data;
+            const src = path.join(tplroot, template.trim());
+            const target = path.join(location.trim(), justFiles ? '' : name.trim());
+            await copyFolder(src, target, {...handleName(name), ...getCommonRenderData(), ...rest},justFiles);
+            log.info('generateCode', src, target,justFiles);
             this.dispose();
         });
         // map.set('getGenerators', () => vscode.workspace.getConfiguration('newProject').get('generators'));

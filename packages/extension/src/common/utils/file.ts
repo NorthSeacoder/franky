@@ -1,6 +1,6 @@
 import {Uri, workspace, window} from 'vscode';
 import fs from 'fs';
-import { emptyDir, mkdirp, pathExists, readdir, remove } from 'fs-extra'
+import {emptyDir, mkdirp, pathExists, readdir, remove} from 'fs-extra';
 import path from 'path';
 import {log} from '@utils/log';
 import Handlebars from 'handlebars';
@@ -104,37 +104,40 @@ export async function readPackageDetails(folderPath: string) {
     return {tploptions, PackageDataMap};
 }
 
-export async function copyFolder(src: string, dest: string, templateProps: any) {
+export async function copyFolder(src: string, dest: string, templateProps: any, justFiles = false) {
     try {
-        if (await pathExists(dest)) {
-            if ((await readdir(dest)).length > 0) {
-              const answer = await window.showInformationMessage('同名文件夹已存在, 是否覆盖?','是')
-              log.info('answer',answer)
-              if (!answer) {
-                return Promise.reject()
-              }
-              await emptyDir(dest)
+        if(!justFiles){
+            //正常写入逻辑,判断是否有同名文件夹,并提示是否覆盖
+            if ((await pathExists(dest))) {
+                if ((await readdir(dest)).length > 0) {
+                    const answer = await window.showInformationMessage('同名文件夹已存在, 是否覆盖?', '是');
+                    log.info('answer', answer);
+                    if (!answer) {
+                        return Promise.reject();
+                    }
+                    await emptyDir(dest);
+                }
+            } else {
+                await mkdirp(dest);
             }
-        } else {
-              await mkdirp(dest)
-          }
-        // 创建目标文件夹（如果不存在）
-
+        }
         // 读取源文件夹内容
         const items = await fs.promises.readdir(src, {withFileTypes: true});
 
         for (const item of items) {
-            const srcPath = path.join(src, item.name);
-            const destPath = path.join(dest, item.name);
+            const nameTemplate = Handlebars.compile(item.name);
+            const itemName = nameTemplate({...templateProps});
+            const srcPath = path.join(src,item.name);
+            const destPath = path.join(dest, itemName);
 
             if (item.isDirectory()) {
                 // 递归复制子文件夹
                 await copyFolder(srcPath, destPath, templateProps);
             } else if (item.isFile()) {
-                if (item.name === 'tpl.json') {
+                if (itemName === 'tpl.json') {
                     // 跳过 tpl.json 文件
                     continue;
-                } else if (path.extname(item.name) === '.hbs') {
+                } else if (path.extname(itemName) === '.hbs') {
                     // 编译 .hbs 文件并写入目标文件夹
                     const templateContent = await fs.promises.readFile(srcPath, 'utf-8');
                     const template = Handlebars.compile(templateContent);

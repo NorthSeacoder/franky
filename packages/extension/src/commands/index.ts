@@ -80,10 +80,10 @@ export class CommandManager extends Disposable {
 
     private async version() {
         try {
-            const gitGraphVersion = await getExtensionVersion(this.context);
+            const frankyhVersion = await getExtensionVersion(this.context);
             const information =
-                'Git Graph: ' +
-                gitGraphVersion +
+                'Franky: ' +
+                frankyhVersion +
                 '\nVisual Studio Code: ' +
                 vscode.version +
                 '\nOS: ' +

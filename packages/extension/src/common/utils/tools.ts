@@ -1,6 +1,7 @@
 import type {TextDocument, Range} from 'vscode';
 import {Position} from 'vscode';
-
+import dayjs from 'dayjs';
+import {getGitInfo} from './git';
 export const isVue = (document: TextDocument) => {
     return document.languageId === 'vue';
 };
@@ -46,12 +47,22 @@ export interface NameInfo {
     camelName: string; //camelCase
     capName: string; //CapCase
 }
-//capName, camelName, hyphenName,
+
 export function handleName(name: string): NameInfo {
     const camelName = camelCase(name);
     return {
         name,
         camelName,
         capName: upperFirst(camelName)
+    };
+}
+
+export function getCommonRenderData() {
+    const timeCreated = dayjs().format('YYYY-MM-DD HH:mm:ss');
+    const {username, email} = getGitInfo();
+    return {
+        timeCreated,
+        username,
+        email
     };
 }

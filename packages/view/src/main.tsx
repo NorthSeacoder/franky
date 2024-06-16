@@ -8,9 +8,6 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
         <ConfigProvider
             theme={{
                 algorithm: theme.darkAlgorithm,
-                token: {
-                    colorPrimary: '#262626'
-                }
             }}>
             <App />
         </ConfigProvider>
