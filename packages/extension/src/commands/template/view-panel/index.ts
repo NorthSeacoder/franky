@@ -46,7 +46,6 @@ export default class CreateProjectPanel {
      * @param extensionUri The URI of the directory containing the extension.
      */
     public static render(extensionUri: vscode.Uri, globalState: vscode.Memento, cwd?: string) {
-        log.info('render', cwd);
         if (CreateProjectPanel.currentPanel) {
             // If the webview panel already exists reveal it
             CreateProjectPanel.currentPanel._panel.reveal(vscode.ViewColumn.One);

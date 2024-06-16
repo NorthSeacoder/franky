@@ -153,7 +153,6 @@ export class FileSystemProvider implements vscode.TreeDataProvider<Entry>, vscod
                 }
                 return a[1] === vscode.FileType.Directory ? -1 : 1;
             });
-            log.info(JSON.stringify(children))
             return children.map(([name, type]) => ({
                 uri: vscode.Uri.file(path.join(localPath, name)),
                 type
