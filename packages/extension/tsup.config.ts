@@ -11,5 +11,5 @@ export default defineConfig({
     shims: false,
     dts: false,
     external: ['vscode'],
-    noExternal: ['tailwindcss', 'css-to-tailwindcss', 'handlebars', 'mkdirp', 'rimraf', 'html-modifier', 'fs-extra']
+    noExternal: ['tailwindcss', 'css-to-tailwindcss', 'handlebars', 'mkdirp', 'rimraf', 'html-modifier', 'fs-extra','postcss-nested']
 });
