@@ -2,7 +2,7 @@
     "name": "franky",
     "displayName": "Franky",
     "description": "tools in work",
-    "version": "1.4.2",
+    "version": "1.4.3",
     "engines": {
         "vscode": "^1.83.0",
         "node": ">=18"
