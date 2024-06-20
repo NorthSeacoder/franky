@@ -9,8 +9,9 @@ export default class FileExplorer {
         const treeDataProvider = new FileSystemProvider();
         cm.registerDisposable(window.createTreeView('fileExplorer', {treeDataProvider}));
         cm.registerCommand('fileExplorer.openFile', (resource) => this.openResource(resource));
-        cm.registerCommand('franky.template.pull', () => {
-            updateTemplatesRepo()
+        cm.registerCommand('franky.template.pull', async () => {
+            await updateTemplatesRepo();
+            treeDataProvider.refresh();
         });
         cm.registerCommand('franky.template.open', () => {
             const localPath = getLoaclPath();

@@ -160,6 +160,7 @@ export default class CreateProjectPanel {
             location: string;
             name: string;
             template: string;
+            justFiles:boolean
         }
         map.set('generateCode', async (data: FormsValues) => {
             // TODO: 生成文件

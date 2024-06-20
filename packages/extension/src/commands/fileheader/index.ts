@@ -1,3 +1,10 @@
+/**
+ * @Author: mengpeng
+ * @Date: 2024-06-18 22:18:54
+ * @Last Modified by: mengpeng 
+ * @Last Modified time: 2024-06-19 08:44:55 
+ */
+
 import {window, Position, Range} from 'vscode';
 import type {TextDocument} from 'vscode';
 import {execSync} from 'child_process';
@@ -20,22 +27,24 @@ export const getTemplate = ({langId, name, time, LastModifiedTime}: ITemplate): 
                   ` * @Date: ${time}`,
                   ` * @Last Modified by: ${name}`,
                   ` * @Last Modified time: ${LastModifiedTime}`,
-                  ' */\n\n',
+                  ' */\n\n'
               ]
             : [
                   `<!-- @Author: ${name} -->`,
                   `<!-- @Date: ${time} -->`,
                   `<!-- @Last Modified by: ${name} -->`,
-                  `<!-- @Last Modified time: ${LastModifiedTime} -->\n\n`,
+                  `<!-- @Last Modified time: ${LastModifiedTime} -->\n\n`
               ]
     ).join('\n');
 };
 export default () => {
     const editor = window.activeTextEditor;
     if (!editor) return;
-    if(Config.disabledFileHeader) return;
+    if (Config.disabledFileHeader) return;
     const langId = editor.document.languageId;
     let name = execSync('git config --get user.name').toString().trim();
+    const commentCtx = editor.document.getText(new Range(0, 0, 2, 0));
+    if (commentCtx.includes('@Author')) return;
     editor.edit(function (editBuilder) {
         const time = dayjs().format('YYYY-MM-DD HH:mm:ss');
         const LastModifiedTime = time;
@@ -51,12 +60,13 @@ export default () => {
 export const fileheaderUpdate = (document: TextDocument) => {
     const editor = window.activeTextEditor;
     if (!editor) return;
-    if(Config.disabledFileHeader) return;
+    if (Config.disabledFileHeader) return;
     const MAX_COMMENT_LINE = 8;
     const commentCtx = document.getText(new Range(0, 0, MAX_COMMENT_LINE, 0));
     const commentLineArray = commentCtx.split('\n');
     let timeDiff = 0;
     const commentNameLineIndex = commentLineArray.findIndex((item) => !!item.match('@Last Modified'));
+    if (commentNameLineIndex === -1) return;
     const commentTimeLineIndex = commentNameLineIndex + 1;
 
     const start = ':';
