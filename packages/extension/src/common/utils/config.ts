@@ -9,8 +9,8 @@ export default {
         return workspace.workspaceFolders?.[0]?.uri?.fsPath || '';
     },
 
-    get jenkinsUrl(): string {
-        return getConfig('jenkins.url', '');
+    get cicdUrl(): string {
+        return getConfig('cicd.url', '');
     },
 
     get templateRepository(): string {

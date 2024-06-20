@@ -39,7 +39,7 @@ export class CommandManager extends Disposable {
         this.registerCommand('franky.generate.css2tailwind', (uri: vscode.Uri) => genTailwindCSS(uri));
         // cicd 跳转
         this.registerCommand('franky.jumpCicd', () => {
-            const url = Config.jenkinsUrl;
+            const url = Config.cicdUrl;
             vscode.env.openExternal(vscode.Uri.parse(url));
         });
         //fileHeader 注释TODO: 功能开关
