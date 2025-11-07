@@ -1,7 +1,11 @@
-import { describe, expect, it } from 'vitest'
+import { describe, it, expect } from 'vitest';
 
-describe('should', () => {
-  it('exported', () => {
-    expect(1).toEqual(1)
-  })
-})
+describe('Extension Entry Point', () => {
+  it('should have activation and deactivation functions', async () => {
+    // Test that the main module exports required functions
+    const { activate, deactivate } = await import('../src/index');
+
+    expect(typeof activate).toBe('function');
+    expect(typeof deactivate).toBe('function');
+  });
+});

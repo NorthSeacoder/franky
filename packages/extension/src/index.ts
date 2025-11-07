@@ -1,33 +1,54 @@
-import {execSync} from 'child_process';
-import type {ExtensionContext} from 'vscode';
-import {StatusBarAlignment, commands, window, workspace, ViewColumn, Uri} from 'vscode';
+import { StatusBarAlignment, window, ExtensionContext } from 'vscode';
+import { ctx } from '@common/context';
+import { CommandManager } from '@commands/index';
+import { log, channel } from '@utils/log';
+import { getGitUsernameSafe } from '@utils/git';
 
-import {ctx} from '@common/context';
+/**
+ * Extension activation entry point
+ */
+export async function activate(context: ExtensionContext): Promise<void> {
+  try {
+    log.info('"franky" is now being activated');
+    ctx.active = true;
 
-import {CommandManager} from '@commands/index';
-import {log, channel} from '@utils/log';
-
-export function activate(context: ExtensionContext) {
+    // Get git user information asynchronously
     try {
-        log.info('"franky" is now active!');
-        ctx.active = true;
-        const name = execSync('git config --get user.name').toString().trim();
-        ctx.name = name;
-        const {subscriptions} = context;
-
-        subscriptions.push(channel);
-
-        const cm = new CommandManager(context);
-        // new FileExplorer(context);
-        const statusBar = window.createStatusBarItem(StatusBarAlignment.Left, 0);
-        statusBar.command = 'franky.jumpCicd';
-        statusBar.text = 'cicd';
-        statusBar.tooltip = 'Jump to cicd';
-        statusBar.show();
-        cm.registerDisposable(statusBar)
+      const username = await getGitUsernameSafe();
+      ctx.name = username;
+      log.info(`Git user: ${username}`);
     } catch (error) {
-        log.debug('activate', error);
+      log.debug('Failed to get git user name, using default:', error);
+      ctx.name = 'franky';
     }
+
+    const { subscriptions } = context;
+
+    // Register output channel
+    subscriptions.push(channel);
+
+    // Initialize command manager
+    new CommandManager(context);
+
+    // Create CI/CD status bar item
+    const statusBar = window.createStatusBarItem(StatusBarAlignment.Left, 0);
+    statusBar.command = 'franky.jumpCicd';
+    statusBar.text = '$(rocket) CI/CD';
+    statusBar.tooltip = 'Jump to CI/CD';
+    statusBar.show();
+    subscriptions.push(statusBar);
+
+    log.info('"franky" activation completed successfully');
+  } catch (error) {
+    log.debug('Activation error:', error);
+    window.showErrorMessage(`Failed to activate Franky: ${error}`);
+  }
 }
 
-export function deactivate() {}
+/**
+ * Extension deactivation cleanup
+ */
+export function deactivate(): void {
+  log.info('"franky" is being deactivated');
+  ctx.active = false;
+}

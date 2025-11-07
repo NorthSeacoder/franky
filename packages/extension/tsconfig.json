@@ -1,8 +1,8 @@
 {
   "compilerOptions": {
-    "target": "es2017",
-    "lib": ["esnext"],
-    "module": "esnext",
+    "target": "ES2022",
+    "lib": ["ES2022"],
+    "module": "ESNext",
     "moduleResolution": "node",
     "resolveJsonModule": true,
     "strict": true,
@@ -10,16 +10,25 @@
     "esModuleInterop": true,
     "skipDefaultLibCheck": true,
     "skipLibCheck": true,
+    "noUnusedLocals": false,
+    "noUnusedParameters": false,
+    "noImplicitReturns": false,
     "baseUrl": ".",
-    "experimentalDecorators": true /* Add a polyfill for the Reflect API (examples below use reflect-metadata)  */,
-    "emitDecoratorMetadata": true /* Add a polyfill for the Reflect API (examples below use reflect-metadata). */,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "types": ["vscode", "node"],
     "paths": {
       "@common/*": ["./src/common/*"],
       "@utils/*": ["./src/common/utils/*"],
       "@commands/*": ["./src/commands/*"],
-      "@/*": ["./src/*"],
-    },
+      "@/*": ["./src/*"]
+    }
   },
-  "include": ["src/**/*"],
-  "exclude": ["node_modules", "dist","**/*.js"]
+  "include": ["src/**/*", "test/**/*"],
+  "exclude": ["node_modules", "dist", "**/*.js", "coverage"],
+  "ts-node": {
+    "compilerOptions": {
+      "module": "commonjs"
+    }
+  }
 }

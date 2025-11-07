@@ -1,9 +1,8 @@
 import { lowerFirst } from '@utils/tools';
 
 export default (name: string) => {
-    const langId = 'typescript';
-    // const fileheader = genFH(langId);
-    return `import { useMemo } from "react";
+  // const fileheader = genFH(langId);
+  return `import { useMemo } from "react";
 
 import { YqgModal, createProgramModal, YqgModalProps } from "@/components/yqg-antd-modal";
 import YqgStaicForm from "@/components/yqg-static-form";
@@ -50,5 +49,5 @@ function View${name}(props: YqgModalProps<ModalProps>) {
 }
 
 export default createProgramModal(View${name})
-`
-}
+`;
+};

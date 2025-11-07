@@ -1,8 +1,5 @@
-// import genFH from './fileheader';
 export default () => {
-    const langId = 'typescript';
-    // const fileheader = genFH(langId);
-    return `
+  return `
 import {useState} from 'react';
 import {useTranslation} from 'react-i18next';
 
@@ -50,5 +47,5 @@ const EditModal: React.FC<Props> = ({record, dismiss, close, location}) => {
 };
 
 export default EditModal;
-`
-}
+`;
+};
