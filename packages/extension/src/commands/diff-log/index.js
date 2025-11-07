@@ -1,15 +1,20 @@
-import { Position, Range, window, workspace } from 'vscode';
+import { window } from 'vscode';
 
 import getGit from '@common/utils/git';
+import { log } from '@utils/log';
 import { getLogsInRange, getRevertCommit } from './hander';
 
 export default async () => {
   try {
     const git = getGit();
-    const editor = window.activeTextEditor;
+    if (!git) {
+      log.info('diff-log: git client unavailable');
+      return;
+    }
+
     let targetBranch = 'master';
-    let sourceBranch = 'master';
-    //TODO:从配置中读取
+    const sourceBranch = 'master';
+    // TODO:从配置中读取
     const project = await window.showInputBox({
       prompt: '请输入项目名称,用于查询 remote 分支，不区分大小写',
     });
@@ -18,17 +23,17 @@ export default async () => {
     });
 
     if (!project || !tags) return;
-    //获取远程分支
-    const branchReg = new RegExp(project, 'i');
-    const branchs = await git.branch(['--list', '-r', 'origin/release/*', '--sort=-committerdate']);
-    const projectBranches = branchs.all.filter((name) => branchReg.test(name)).slice(0, 10);
-    targetBranch = await window.showQuickPick(projectBranches, { placeHolder: '请选择对比分支' });
-    const configs = await git.listConfig();
-    console.log({ targetBranch }, configs);
-    const commits = await getLogsInRange({ tags, from: targetBranch, to: sourceBranch });
 
+    const branchReg = new RegExp(project, 'i');
+    const branches = await git.branch(['--list', '-r', 'origin/release/*', '--sort=-committerdate']);
+    const projectBranches = branches.all.filter((name) => branchReg.test(name)).slice(0, 10);
+    targetBranch =
+      (await window.showQuickPick(projectBranches, { placeHolder: '请选择对比分支' })) || targetBranch;
+
+    const commits = await getLogsInRange({ tags, from: targetBranch, to: sourceBranch });
     const reverts = await getLogsInRange({ tags, from: sourceBranch, to: targetBranch });
     const revertCommits = await getRevertCommit(reverts);
+
     const channel = window.createOutputChannel('Franky');
     channel.appendLine(`对比分支:${targetBranch};  筛选 tag :${tags}`);
 
@@ -49,30 +54,30 @@ export default async () => {
       ],
       { placeHolder: '请选择输出方式' }
     );
+
+    if (!outType) {
+      return;
+    }
+
     if (outType.value === 'commit') {
-      const comitMsg = [...commits, ...revertCommits]
-        .sort((a, b) => {
-          let t1 = new Date(a.date);
-          let t2 = new Date(b.date);
-          return t2.getTime() - t1.getTime();
-        })
-        .reduce((res, { summary }) => (res += summary), '');
-      channel.append(comitMsg);
+      const commitMsg = [...commits, ...revertCommits]
+        .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+        .map(({ summary }) => summary)
+        .join('');
+      channel.append(commitMsg);
       channel.show();
     }
+
     if (outType.value === 'revert') {
       channel.appendLine('Commits: ');
-      const commitMsg = commits.reduce((res, { summary }) => (res += summary), '');
+      const commitMsg = commits.map(({ summary }) => summary).join('');
       channel.append(commitMsg);
       channel.appendLine('Reverts: ');
-      const revertMsg = revertCommits.reduce(
-        (res, { revertSummary }) => (res += revertSummary),
-        ''
-      );
+      const revertMsg = revertCommits.map(({ revertSummary }) => revertSummary).join('');
       channel.append(revertMsg);
       channel.show();
     }
   } catch (error) {
-    console.log(error);
+    log.debug('diff-log error', error);
   }
 };

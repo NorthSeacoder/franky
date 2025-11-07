@@ -1,7 +1,14 @@
 import { useState } from 'react';
 import { join } from 'path-browserify';
 
-const webviewPublicPath = ((window as any).__webview_public_path__ as string) ?? '';
+declare global {
+  interface Window {
+    __webview_public_path__?: string;
+  }
+}
+
+const webviewPublicPath = window.__webview_public_path__ ?? '';
+
 export function useWebviewPublicPath(relativePath: string) {
   const path = join(webviewPublicPath, relativePath);
   return useState(path);

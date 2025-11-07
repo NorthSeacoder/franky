@@ -2,6 +2,7 @@
   "name": "franky",
   "description": "tools in work",
   "version": "1.5.0",
+  "type": "module",
   "license": "MIT",
   "repository": {
     "type": "git",

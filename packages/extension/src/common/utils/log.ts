@@ -3,18 +3,17 @@ import { window } from 'vscode';
 export const channel = window.createOutputChannel('Franky');
 
 export const log = {
-  debug(...args: any[]) {
-    // eslint-disable-next-line no-console
+  debug(...args: unknown[]) {
     const time = new Date().toLocaleTimeString();
     this.log(`[Debug - ${time}] `, ...args);
   },
 
-  log(...args: any[]) {
+  log(...args: unknown[]) {
     const msg = args.map((i) => String(i)).join(' ');
     channel.appendLine(msg);
   },
 
-  info(...args: any[]) {
+  info(...args: unknown[]) {
     const time = new Date().toLocaleTimeString();
     this.log(`[Info - ${time}] `, ...args);
   },

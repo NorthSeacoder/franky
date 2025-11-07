@@ -17,7 +17,9 @@ function App() {
   // const [dirpath, setDirpath] = useState('');
   useMount(async () => {
     const getTemplateOptions = await vscode.invoke({ command: 'getTemplateOptions' });
-    console.log('active: ', getTemplateOptions);
+    if (getTemplateOptions) {
+      console.warn('Franky template options fetched', getTemplateOptions);
+    }
   });
   // function handleHowdyClick() {
   //     console.log('handleHowdyClick');

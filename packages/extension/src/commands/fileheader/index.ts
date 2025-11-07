@@ -15,7 +15,7 @@ interface TemplateData {
 const MAX_COMMENT_LINE = 8;
 const MIN_TIME_DIFF_MS = 2000;
 
-function getTemplate({ langId, name, time, LastModifiedTime }: TemplateData): string {
+export function getTemplate({ langId, name, time, LastModifiedTime }: TemplateData): string {
   const lines =
     langId !== 'vue'
       ? [

@@ -24,15 +24,15 @@ export async function readPackageDetails(folderPath: string) {
           if (err.code === 'ENOENT') {
             // package.json does not exist in this folder
             subFolderDetail.push({ label: folder.name, field: folder.name });
-            console.log(`No package.json found in ${folder.name}.`);
+            console.warn(`No package.json found in ${folder.name}.`);
           } else {
-            console.log(`Error reading package.json in ${folder.name}:`, err);
+            console.error(`Error reading package.json in ${folder.name}:`, err);
           }
         }
       }
     }
   } catch (err) {
-    console.log('Error reading root directory:', err);
+    console.error('Error reading root directory:', err);
   }
   return subFolderDetail;
 }

@@ -9,6 +9,8 @@ import type { WebviewApi } from 'vscode-webview';
  * dev server by using native web browser features that mock the functionality
  * enabled by acquireVsCodeApi.
  */
+declare const acquireVsCodeApi: undefined | ((...args: unknown[]) => WebviewApi<unknown>);
+
 class VSCodeAPIWrapper {
   private readonly vsCodeApi: WebviewApi<unknown> | undefined;
 
@@ -24,21 +26,21 @@ class VSCodeAPIWrapper {
     if (this.vsCodeApi) {
       this.vsCodeApi.postMessage(message);
     } else {
-      console.log(message);
+      console.warn(message);
     }
   }
 
-  async invoke(options: { command: string; default?: any; args?: any[] }): Promise<any> {
-    return await new Promise<string>((resolve) => {
+  async invoke<T = unknown>(options: { command: string; default?: T; args?: unknown[] }): Promise<T | undefined> {
+    return await new Promise<T | undefined>((resolve) => {
       if (typeof acquireVsCodeApi !== 'function') {
         resolve(options.default);
         return;
       }
-      const id = Date.now() + '_' + Math.random();
-      const listener = (message: MessageEvent) => {
-        const data = message.data;
+      const id = `${Date.now()}_${Math.random()}`;
+      const listener = (message: MessageEvent<{ command: string; data: T[] }>) => {
+        const { data } = message;
         if (data.command === id) {
-          resolve(data.data[0]);
+          resolve(data.data?.[0]);
           window.removeEventListener('message', listener);
         }
       };

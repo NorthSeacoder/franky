@@ -252,7 +252,7 @@ import { TailwindConverter } from 'css-to-tailwindcss';
 
 import loadConfig from 'tailwindcss/loadConfig';
 import PostcssNestedPlugin from 'postcss-nested';
-// const esm = require('esm')(module /*, options*/);
+
 export const genTailwindCSS = async (uri: Uri) => {
   log.info('start genTailwindCSS');
   try {
@@ -280,12 +280,12 @@ export const genTailwindCSS = async (uri: Uri) => {
 
     log.info(foundFile.fsPath);
     const config = loadConfig(foundFile.fsPath);
-    // const config = esm(foundFile.fsPath);
-    console.log(config);
+    log.info('Tailwind config loaded', config);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const converter = new TailwindConverter({
       remInPx: 16,
-      postCSSPlugins: [PostcssNestedPlugin],
-      tailwindConfig: config,
+      postCSSPlugins: [PostcssNestedPlugin as any],
+      tailwindConfig: config as any,
     });
 
     // 获取剪贴板中内容

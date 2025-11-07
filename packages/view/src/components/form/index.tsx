@@ -30,10 +30,12 @@ interface InputConfig extends BaseConfig {
 
 type IExtraOptions = SelectConfig | CheckboxConfig | InputConfig;
 
-interface FormsValues extends Record<string, unknown> {
+interface FormsValues {
   location: string;
   name: string;
   template: string;
+  justFiles?: boolean;
+  [key: string]: string | boolean | undefined;
 }
 
 interface IPackageJson {
@@ -46,32 +48,38 @@ export default function FrankyForm() {
   const [form] = Form.useForm<FormsValues>();
 
   useMount(async () => {
-    //获取缓存数据
+    // Get cached data
     const store = (await vscode.getState('FrankyForm')) as FormsValues;
 
-    //获取当前路径
-    const currentPath = await vscode.invoke({ command: 'getCurrentPath' });
-    const init = {
-      location: currentPath,
+    // Get current path
+    const currentPath = (await vscode.invoke({ command: 'getCurrentPath' })) as string | undefined;
+    const init: FormsValues = {
+      location: currentPath || '',
       name: '',
       template: '',
     };
     if (store) {
-      const other = { ...store, location: currentPath };
+      const other = { ...store, location: currentPath || '' };
       Object.assign(init, other);
     }
     form.setFieldsValue(init);
   });
 
-  //template
+  // Template options
   const [TemplateOptions, setTemplateOptions] = useState<IOption[]>([]);
   const [pkgMap, setPkgMap] = useState<Record<string, IPackageJson>>({});
 
   useMount(async () => {
-    //select options
-    const { tploptions, PackageDataMap } = await vscode.invoke({ command: 'getTemplateOptions' });
-    setTemplateOptions(tploptions);
-    setPkgMap(PackageDataMap);
+    // Select options
+    const response = (await vscode.invoke({ command: 'getTemplateOptions' })) as {
+      tploptions: IOption[];
+      PackageDataMap: Record<string, IPackageJson>;
+    } | undefined;
+    
+    if (response) {
+      setTemplateOptions(response.tploptions);
+      setPkgMap(response.PackageDataMap);
+    }
   });
 
   async function onSelectPath() {

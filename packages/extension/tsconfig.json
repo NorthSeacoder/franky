@@ -25,5 +25,10 @@
     }
   },
   "include": ["src/**/*", "test/**/*"],
-  "exclude": ["node_modules", "dist", "**/*.js", "coverage"]
+  "exclude": ["node_modules", "dist", "**/*.js", "coverage"],
+  "ts-node": {
+    "compilerOptions": {
+      "module": "commonjs"
+    }
+  }
 }
