@@ -1,3 +1,1 @@
-
-
-export type ErrorInfo = string | null; 
+export type ErrorInfo = string | null;

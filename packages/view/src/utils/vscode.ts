@@ -1,4 +1,4 @@
-import type { WebviewApi } from "vscode-webview";
+import type { WebviewApi } from 'vscode-webview';
 
 /**
  * A utility wrapper around the acquireVsCodeApi() function, which enables
@@ -15,7 +15,7 @@ class VSCodeAPIWrapper {
   constructor() {
     // Check if the acquireVsCodeApi function exists in the current development
     // context (i.e. VS Code development window or web browser)
-    if (typeof acquireVsCodeApi === "function") {
+    if (typeof acquireVsCodeApi === 'function') {
       this.vsCodeApi = acquireVsCodeApi();
     }
   }
@@ -27,44 +27,44 @@ class VSCodeAPIWrapper {
       console.log(message);
     }
   }
-  
+
   async invoke(options: { command: string; default?: any; args?: any[] }): Promise<any> {
     return await new Promise<string>((resolve) => {
       if (typeof acquireVsCodeApi !== 'function') {
-        resolve(options.default)
-        return
+        resolve(options.default);
+        return;
       }
-      const id = Date.now() + '_' + Math.random()
+      const id = Date.now() + '_' + Math.random();
       const listener = (message: MessageEvent) => {
-        const data = message.data
+        const data = message.data;
         if (data.command === id) {
-          resolve(data.data[0])
-          window.removeEventListener('message', listener)
+          resolve(data.data[0]);
+          window.removeEventListener('message', listener);
         }
-      }
-      window.addEventListener('message', listener)
+      };
+      window.addEventListener('message', listener);
       vscode.postMessage({
         command: options.command,
         data: options.args,
         callback: id,
-      })
-    })
+      });
+    });
   }
 
-  async getState(key: string):Promise<unknown | undefined> {
+  async getState(key: string): Promise<unknown | undefined> {
     if (this.vsCodeApi) {
-      return await this.invoke({ command: 'getState', args: [key] })
+      return await this.invoke({ command: 'getState', args: [key] });
     } else {
-      const state = localStorage.getItem(key)
-      return state ? JSON.parse(state) : undefined
+      const state = localStorage.getItem(key);
+      return state ? JSON.parse(state) : undefined;
     }
   }
 
   async setState<T extends unknown | undefined>(key: string, newState: T): Promise<void> {
     if (this.vsCodeApi) {
-      return await this.invoke({ command: 'setState', args: [key, newState] })
+      return await this.invoke({ command: 'setState', args: [key, newState] });
     } else {
-      localStorage.setItem(key, JSON.stringify(newState))
+      localStorage.setItem(key, JSON.stringify(newState));
     }
   }
 }

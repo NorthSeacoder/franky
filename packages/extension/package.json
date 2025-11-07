@@ -1,284 +1,295 @@
 {
-    "name": "franky",
-    "displayName": "Franky",
-    "description": "tools in work",
-    "version": "1.4.5",
-    "engines": {
-        "vscode": "^1.83.0",
-        "node": ">=18"
+  "name": "franky",
+  "displayName": "Franky",
+  "description": "A convenient development toolkit for VSCode",
+  "version": "1.5.0",
+  "engines": {
+    "vscode": "^1.95.0",
+    "node": ">=18"
+  },
+  "publisher": "NorthSeacoder",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/NorthSeacoder/franky.git"
+  },
+  "icon": "images/tools.png",
+  "categories": [
+    "Other"
+  ],
+  "keywords": [
+    "fileheader",
+    "git log",
+    "multi-root ready",
+    "template generator",
+    "productivity"
+  ],
+  "activationEvents": [
+    "onStartupFinished"
+  ],
+  "extensionPack": [
+    "songqian.vscode-code-to-type"
+  ],
+  "main": "./dist/extension/index.js",
+  "files": [
+    "dist"
+  ],
+  "contributes": {
+    "views": {
+      "explorer": [
+        {
+          "id": "fileExplorer",
+          "name": "当前模板"
+        }
+      ]
     },
-    "publisher": "NorthSeacoder",
-    "license": "MIT",
-    "repository": {
-        "type": "git",
-        "url": "https://github.com/NorthSeacoder/franky.git"
-    },
-    "icon": "images/tools.png",
-    "categories": [
-        "Other"
+    "commands": [
+      {
+        "command": "franky.version",
+        "title": "查看扩展信息",
+        "category": "Franky"
+      },
+      {
+        "command": "franky.fileheader",
+        "title": "fileheader",
+        "category": "Franky"
+      },
+      {
+        "command": "franky.diffLog",
+        "title": "diffLog",
+        "category": "Franky"
+      },
+      {
+        "command": "franky.jumpCicd",
+        "title": "跳转cicd 页面",
+        "category": "Franky"
+      },
+      {
+        "command": "franky.generate.vue",
+        "title": "生成新页面(vue)",
+        "category": "Franky"
+      },
+      {
+        "command": "franky.generate.wp",
+        "title": "生成新页面(wp)",
+        "category": "Franky"
+      },
+      {
+        "command": "franky.generate.react",
+        "title": "生成新页面(react)",
+        "category": "Franky"
+      },
+      {
+        "command": "franky.template",
+        "title": "动态模板",
+        "category": "Franky"
+      },
+      {
+        "command": "franky.generate.defs",
+        "title": "根据选中内容生成 def",
+        "category": "Franky"
+      },
+      {
+        "command": "franky.generate.fields",
+        "title": "根据复制内容生成 fields",
+        "category": "Franky"
+      },
+      {
+        "command": "franky.generate.css2tailwind",
+        "title": "根据复制的CSS生成TailwindCSS 类名",
+        "category": "Franky"
+      },
+      {
+        "command": "franky.template.pull",
+        "title": "拉取最新模板",
+        "category": "Franky",
+        "icon": "$(refresh)"
+      },
+      {
+        "command": "franky.template.open",
+        "title": "打开模板文件夹",
+        "category": "Franky",
+        "icon": "$(file-directory)"
+      }
     ],
-    "keywords": [
-        "fileheader",
-        "git log",
-        "multi-root ready"
-    ],
-    "activationEvents": [
-        "onStartupFinished"
-    ],
-    "extensionPack": [
-        "songqian.vscode-code-to-type"
-    ],
-    "main": "./dist/extension/index.js",
-    "files": [
-        "dist"
-    ],
-    "contributes": {
-        "views": {
-            "explorer": [
-                {
-                    "id": "fileExplorer",
-                    "name": "当前模板"
-                }
-            ]
+    "menus": {
+      "view/title": [
+        {
+          "command": "franky.template.open",
+          "when": "view == fileExplorer",
+          "group": "navigation"
         },
-        "commands": [
-            {
-                "command": "franky.version",
-                "title": "查看扩展信息",
-                "category": "Franky"
-            },
-            {
-                "command": "franky.fileheader",
-                "title": "fileheader",
-                "category": "Franky"
-            },
-            {
-                "command": "franky.diffLog",
-                "title": "diffLog",
-                "category": "Franky"
-            },
-            {
-                "command": "franky.jumpCicd",
-                "title": "跳转cicd 页面",
-                "category": "Franky"
-            },
-            {
-                "command": "franky.generate.vue",
-                "title": "生成新页面(vue)",
-                "category": "Franky"
-            },
-            {
-                "command": "franky.generate.wp",
-                "title": "生成新页面(wp)",
-                "category": "Franky"
-            },
-            {
-                "command": "franky.generate.react",
-                "title": "生成新页面(react)",
-                "category": "Franky"
-            },
-            {
-                "command": "franky.template",
-                "title": "动态模板",
-                "category": "Franky"
-            },
-            {
-                "command": "franky.generate.defs",
-                "title": "根据选中内容生成 def",
-                "category": "Franky"
-            },
-            {
-                "command": "franky.generate.fields",
-                "title": "根据复制内容生成 fields",
-                "category": "Franky"
-            },
-            {
-                "command": "franky.generate.css2tailwind",
-                "title": "根据复制的CSS生成TailwindCSS 类名",
-                "category": "Franky"
-            },
-            {
-                "command": "franky.template.pull",
-                "title": "拉取最新模板",
-                "category": "Franky",
-                "icon": "$(refresh)"
-            },
-            {
-                "command": "franky.template.open",
-                "title": "打开模板文件夹",
-                "category": "Franky",
-                "icon": "$(file-directory)"
-            }
-        ],
-        "menus": {
-            "view/title": [
-                {
-                    "command": "franky.template.open",
-                    "when": "view == fileExplorer",
-                    "group": "navigation"
-                },
-                {
-                    "command": "franky.template.pull",
-                    "when": "view == fileExplorer",
-                    "group": "navigation"
-                }
-            ],
-            "explorer/context": [
-                {
-                    "submenu": "franky.explorerAction",
-                    "group": "navigation@1"
-                }
-            ],
-            "editor/context": [
-                {
-                    "submenu": "franky.editorAction",
-                    "group": "navigation@1"
-                }
-            ],
-            "franky.editorAction": [
-                {
-                    "command": "franky.generate.fields",
-                    "group": "1_franky@1",
-                    "when": "editorLangId == typescript || editorLangId == javascript || editorLangId == typescriptreact || editorLangId == javascriptreact"
-                },
-                {
-                    "command": "code-to-type.copy",
-                    "group": "1_franky@2",
-                    "when": "editorLangId == typescript || editorLangId == javascript || editorLangId == typescriptreact || editorLangId == javascriptreact"
-                },
-                {
-                    "command": "franky.generate.css2tailwind",
-                    "group": "1_franky@3",
-                    "when": "editorLangId == typescript || editorLangId == javascript || editorLangId == typescriptreact || editorLangId == javascriptreact"
-                }
-            ],
-            "franky.explorerAction": [
-                {
-                    "command": "franky.generate.vue",
-                    "group": "1_franky@1",
-                    "when": "explorerResourceIsFolder"
-                },
-                {
-                    "command": "franky.generate.react",
-                    "group": "1_franky@2",
-                    "when": "explorerResourceIsFolder"
-                },
-                {
-                    "command": "franky.generate.wp",
-                    "group": "1_franky@3",
-                    "when": "explorerResourceIsFolder"
-                },
-                {
-                    "command": "franky.template",
-                    "group": "1_franky@4",
-                    "when": "explorerResourceIsFolder"
-                }
-            ]
+        {
+          "command": "franky.template.pull",
+          "when": "view == fileExplorer",
+          "group": "navigation"
+        }
+      ],
+      "explorer/context": [
+        {
+          "submenu": "franky.explorerAction",
+          "group": "navigation@1"
+        }
+      ],
+      "editor/context": [
+        {
+          "submenu": "franky.editorAction",
+          "group": "navigation@1"
+        }
+      ],
+      "franky.editorAction": [
+        {
+          "command": "franky.generate.fields",
+          "group": "1_franky@1",
+          "when": "editorLangId == typescript || editorLangId == javascript || editorLangId == typescriptreact || editorLangId == javascriptreact"
         },
-        "submenus": [
-            {
-                "id": "franky.explorerAction",
-                "label": "Franky"
-            },
-            {
-                "id": "franky.editorAction",
-                "label": "Franky"
-            }
-        ],
-        "keybindings": [
-            {
-                "command": "franky.fileheader",
-                "key": "ctrl+alt+i",
-                "when": "editorTextFocus"
-            },
-            {
-                "command": "franky.diffLog",
-                "key": "ctrl+alt+d",
-                "when": "editorTextFocus"
-            }
-        ],
-        "configuration": {
-            "type": "object",
-            "title": "franky Configuration",
-            "properties": {
-                "franky.fileheader.disabled": {
-                    "type": "boolean",
-                    "default": false,
-                    "description": "是否禁用fileheader功能"
-                },
-                "franky.cicd.url": {
-                    "type": "string",
-                    "default": "https://www.jenkins.io/",
-                    "description": "your cicd url,default value is jenkins's homepage"
-                },
-                "franky.templates.repository": {
-                    "type": "string",
-                    "default": "https://github.com/NorthSeacoder/templates.git",
-                    "description": "模板仓库路径"
-                },
-                "franky.templates.local": {
-                    "type": "string",
-                    "default": "/tmp/franky",
-                    "description": "模板本地路径"
-                }
-            }
+        {
+          "command": "code-to-type.copy",
+          "group": "1_franky@2",
+          "when": "editorLangId == typescript || editorLangId == javascript || editorLangId == typescriptreact || editorLangId == javascriptreact"
         },
-        "snippets": [
-            {
-                "language": "typescript",
-                "path": "./snippets/common.json"
-            },
-            {
-                "language": "vue",
-                "path": "./snippets/common.json"
-            },
-            {
-                "language": "javascript",
-                "path": "./snippets/common.json"
-            },
-            {
-                "language": "typescriptreact",
-                "path": "./snippets/common.json"
-            },
-            {
-                "language": "javascriptreact",
-                "path": "./snippets/common.json"
-            }
-        ]
+        {
+          "command": "franky.generate.css2tailwind",
+          "group": "1_franky@3",
+          "when": "editorLangId == typescript || editorLangId == javascript || editorLangId == typescriptreact || editorLangId == javascriptreact"
+        }
+      ],
+      "franky.explorerAction": [
+        {
+          "command": "franky.generate.vue",
+          "group": "1_franky@1",
+          "when": "explorerResourceIsFolder"
+        },
+        {
+          "command": "franky.generate.react",
+          "group": "1_franky@2",
+          "when": "explorerResourceIsFolder"
+        },
+        {
+          "command": "franky.generate.wp",
+          "group": "1_franky@3",
+          "when": "explorerResourceIsFolder"
+        },
+        {
+          "command": "franky.template",
+          "group": "1_franky@4",
+          "when": "explorerResourceIsFolder"
+        }
+      ]
     },
-    "scripts": {
-        "clear": "rimraf dist/extension",
-        "build": "rimraf dist/extension && env NODE_ENV=production tsup",
-        "dev": "env NODE_ENV=development tsup",
-        "lint": "eslint .",
-        "vscode:prepublish": "nr build",
-        "publish": "vsce publish --no-dependencies",
-        "pack": "vsce package --no-dependencies",
-        "test": "vitest",
-        "typecheck": "tsc --noEmit",
-        "release": "bumpp && nr publish"
+    "submenus": [
+      {
+        "id": "franky.explorerAction",
+        "label": "Franky"
+      },
+      {
+        "id": "franky.editorAction",
+        "label": "Franky"
+      }
+    ],
+    "keybindings": [
+      {
+        "command": "franky.fileheader",
+        "key": "ctrl+alt+i",
+        "when": "editorTextFocus"
+      },
+      {
+        "command": "franky.diffLog",
+        "key": "ctrl+alt+d",
+        "when": "editorTextFocus"
+      }
+    ],
+    "configuration": {
+      "type": "object",
+      "title": "franky Configuration",
+      "properties": {
+        "franky.fileheader.disabled": {
+          "type": "boolean",
+          "default": false,
+          "description": "是否禁用fileheader功能"
+        },
+        "franky.cicd.url": {
+          "type": "string",
+          "default": "https://www.jenkins.io/",
+          "description": "your cicd url,default value is jenkins's homepage"
+        },
+        "franky.templates.repository": {
+          "type": "string",
+          "default": "https://github.com/NorthSeacoder/templates.git",
+          "description": "模板仓库路径"
+        },
+        "franky.templates.local": {
+          "type": "string",
+          "default": "/tmp/franky",
+          "description": "模板本地路径"
+        }
+      }
     },
-    "devDependencies": {
-        "@types/fs-extra": "^11.0.4",
-        "@types/node": "^20.9.0",
-        "@types/vscode": "^1.83.0",
-        "@vscode/vsce": "^2.26.0",
-        "bumpp": "^9.2.0",
-        "dayjs": "^1.10.7",
-        "eslint": "^8.53.0",
-        "simple-git": "^2.47.0",
-        "tsup": "^7.2.0",
-        "typescript": "^5.2.2",
-        "vitest": "^0.34.6"
-    },
-    "dependencies": {
-        "css-to-tailwindcss": "^1.0.5",
-        "fs-extra": "^11.2.0",
-        "handlebars": "^4.7.8",
-        "html-modifier": "^1.2.0",
-        "mkdirp": "^3.0.1",
-        "postcss-nested": "6.0.1",
-        "rimraf": "^5.0.7",
-        "tailwindcss": "^3.4.1"
-    }
+    "snippets": [
+      {
+        "language": "typescript",
+        "path": "./snippets/common.json"
+      },
+      {
+        "language": "vue",
+        "path": "./snippets/common.json"
+      },
+      {
+        "language": "javascript",
+        "path": "./snippets/common.json"
+      },
+      {
+        "language": "typescriptreact",
+        "path": "./snippets/common.json"
+      },
+      {
+        "language": "javascriptreact",
+        "path": "./snippets/common.json"
+      }
+    ]
+  },
+  "scripts": {
+    "clear": "rimraf dist/extension coverage",
+    "build": "rimraf dist/extension && env NODE_ENV=production tsup",
+    "dev": "env NODE_ENV=development tsup --watch",
+    "lint": "eslint src --ext .ts",
+    "lint:fix": "eslint src --ext .ts --fix",
+    "format": "prettier --write \"src/**/*.ts\"",
+    "format:check": "prettier --check \"src/**/*.ts\"",
+    "vscode:prepublish": "pnpm run build",
+    "publish": "vsce publish --no-dependencies",
+    "pack": "vsce package --no-dependencies",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "typecheck": "tsc --noEmit",
+    "release": "bumpp && pnpm run publish"
+  },
+  "devDependencies": {
+    "@types/fs-extra": "^11.0.4",
+    "@types/node": "^22.10.0",
+    "@types/vscode": "^1.95.0",
+    "@typescript-eslint/eslint-plugin": "^8.46.3",
+    "@typescript-eslint/parser": "^8.46.3",
+    "@vitest/coverage-v8": "^4.0.7",
+    "@vscode/vsce": "^3.6.2",
+    "bumpp": "^10.3.1",
+    "eslint": "^9.39.1",
+    "tsup": "^8.5.0",
+    "typescript": "^5.9.3",
+    "vite": "^7.2.1",
+    "vitest": "^4.0.7"
+  },
+  "dependencies": {
+    "css-to-tailwindcss": "^1.0.5",
+    "dayjs": "^1.11.19",
+    "fs-extra": "^11.3.2",
+    "handlebars": "^4.7.8",
+    "html-modifier": "^1.2.0",
+    "mkdirp": "^3.0.1",
+    "postcss-nested": "^7.0.2",
+    "rimraf": "^6.1.0",
+    "simple-git": "^3.30.0",
+    "tailwindcss": "^3.4.17"
+  }
 }

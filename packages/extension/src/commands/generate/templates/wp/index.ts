@@ -1,9 +1,8 @@
 import { lowerFirst } from '@utils/tools';
 
 export default (name: string) => {
-    const langId = 'typescript';
-    // const fileheader = genFH(langId);
-    return `import { useMemo } from "react";
+  // const fileheader = genFH(langId);
+  return `import { useMemo } from "react";
 import { EditIcon, SearchIcon } from "@/components/icon";
 import { Button } from "@/components/ui/button";
 import YqgTable from "@/components/yqg-table";
@@ -145,5 +144,5 @@ export default function ${name}List() {
         </>
     );
 }
-`
-}
+`;
+};

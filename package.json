@@ -1,34 +1,52 @@
 {
-    "name": "franky",
-    "description": "tools in work",
-    "version": "1.4.1",
-    "license": "MIT",
-    "repository": {
-        "type": "git",
-        "url": "https://github.com/NorthSeacoder/franky.git"
-    },
-    "main": "index.js",
-    "scripts": {
-        "cz": "git add . && git-cz",
-        "cl": "conventional-changelog -p angular -i packages/extension/CHANGELOG.md -s -r 0",
-        "dev":"nr -F view watch ",
-        "dev:extension": "pnpm run -F franky dev",
-        "build": "run-s build:*",
-        "build:view":"pnpm run -F view build",
-        "build:extension": "pnpm run -F franky build",
-        "lint": "eslint .",
-        "publish": "pnpm run -F franky  publish",
-        "pack": "pnpm run -F franky pack",
-        "release": "pnpm run -F franky release"
-    },
-    "devDependencies": {
-        "@antfu/ni": "^0.21.9",
-        "commitizen": "^4.1.5",
-        "conventional-changelog": "^4.0.0",
-        "conventional-changelog-cli": "^3.0.0",
-        "npm-run-all": "^4.1.5",
-        "rimraf": "^5.0.7"
-    },
-    "dependencies": {
-    }
+  "name": "franky",
+  "description": "tools in work",
+  "version": "1.5.0",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/NorthSeacoder/franky.git"
+  },
+  "main": "index.js",
+  "scripts": {
+    "prepare": "husky install",
+    "clean": "corepack pnpm -r exec rimraf dist coverage",
+    "clean:all": "corepack pnpm run clean && rimraf node_modules",
+    "dev": "corepack pnpm --filter view dev",
+    "dev:extension": "corepack pnpm run -F franky dev",
+    "build": "corepack pnpm -r run build",
+    "build:view": "corepack pnpm run -F view build",
+    "build:extension": "corepack pnpm run -F franky build",
+    "format": "prettier --write \"**/*.{ts,tsx,js,jsx,json,md,css,scss,html}\"",
+    "format:check": "prettier --check \"**/*.{ts,tsx,js,jsx,json,md,css,scss,html}\"",
+    "lint": "corepack pnpm -r run lint",
+    "typecheck": "corepack pnpm -r run typecheck",
+    "test": "corepack pnpm -r run test",
+    "cz": "cz",
+    "release": "pnpm run -F franky release"
+  },
+  "lint-staged": {
+    "*.{ts,tsx,js,jsx}": [
+      "eslint --fix"
+    ],
+    "*.{ts,tsx,js,jsx,json,css,scss,md}": [
+      "prettier --write"
+    ]
+  },
+  "devDependencies": {
+    "@antfu/ni": "^27.0.1",
+    "@eslint/js": "^9.13.0",
+    "@typescript-eslint/eslint-plugin": "^8.46.3",
+    "@typescript-eslint/parser": "^8.46.3",
+    "commitizen": "^4.3.1",
+    "conventional-changelog": "^7.1.1",
+    "conventional-changelog-cli": "^5.0.0",
+    "eslint": "^9.39.1",
+    "globals": "^15.13.0",
+    "husky": "^9.1.7",
+    "lint-staged": "^15.2.7",
+    "npm-run-all": "^4.1.5",
+    "prettier": "^3.4.2",
+    "rimraf": "^6.1.0"
+  }
 }

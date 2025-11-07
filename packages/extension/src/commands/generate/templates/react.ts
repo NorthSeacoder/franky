@@ -1,8 +1,7 @@
 // import genFH from './fileheader';
 export default (name: string) => {
-    const langId = 'typescript';
-    // const fileheader = genFH(langId);
-    return `
+  // const fileheader = genFH(langId);
+  return `
 import {Button} from 'antd';
 import {useState} from 'react';
 import {useTranslation} from 'react-i18next';
@@ -97,4 +96,5 @@ const ${name}: React.FC<Props> = ({currentUser, location}) => {
 };
 
 export default connect(state => ({currentUser: state.user}))(${name});
-`}
+`;
+};

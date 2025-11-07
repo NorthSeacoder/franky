@@ -1,9 +1,8 @@
 // import genFH from './fileheader';
-export default ({name, componentName}: {name: string; componentName: string}) => {
-    const langId = 'vue';
-    // const fileheader = genFH(langId);
+export default ({ name, componentName }: { name: string; componentName: string }) => {
+  // const fileheader = genFH(langId);
 
-    return `
+  return `
 <template>
     <div class="${componentName}">
         <yqg-simple-form

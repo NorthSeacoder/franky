@@ -1,9 +1,8 @@
 import { lowerFirst } from '@utils/tools';
 
 export default (name: string) => {
-    const langId = 'typescript';
-    // const fileheader = genFH(langId);
-    return `import { useMemo } from "react";
+  // const fileheader = genFH(langId);
+  return `import { useMemo } from "react";
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
 
@@ -79,5 +78,5 @@ function Edit${name} (props: YqgModalProps<ModalProps>) {
 }
 
 export default createProgramModal(Edit${name});
-`
-}
+`;
+};
