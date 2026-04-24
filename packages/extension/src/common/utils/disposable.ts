@@ -27,7 +27,7 @@ export class Disposable implements vscode.Disposable {
         this.disposables.push(disposable);
     }
     // 注册多个可释放的对象
-    protected registerDisposables(...disposables: vscode.Disposable[]) {
+    public registerDisposables(...disposables: vscode.Disposable[]) {
         // 将对象添加到disposables数组
         this.disposables.push(...disposables);
     }

@@ -42,6 +42,7 @@ export class FileSystemProvider implements vscode.TreeDataProvider<Entry>, vscod
     }
     //fileSyatem
     get onDidChangeFile(): vscode.Event<vscode.FileChangeEvent[]> {
+        log.info('onDidChangeFile')
         return this._onDidChangeFile.event;
     }
     watch(uri: vscode.Uri, options: {recursive: boolean; excludes: string[]}): vscode.Disposable {
